@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.ui
+package com.example.todoapp.tasks.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -6,13 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,8 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.todoapp.R
+import com.example.todoapp.tasks.ui.TonalButton
 
 @Composable
 fun BackgroundScreen(screen: @Composable () -> Unit) {
@@ -45,7 +42,7 @@ fun BackgroundScreen(screen: @Composable () -> Unit) {
 }
 
 @Composable
-fun LogoAndButtons() {
+fun LogoAndButtons(navHostController: NavHostController) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -59,22 +56,17 @@ fun LogoAndButtons() {
                 .size(230.dp)
         )
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.offset(y = 45.dp)) {
-            TonalButton(title = "Iniciar Sesión")
-            TonalButton(title = "Regístrate")
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.offset(y = 45.dp)
+        ) {
+            TonalButton(
+                title = "Iniciar Sesión",
+                navigate = { navHostController.navigate("loginScreen") })
+            TonalButton(
+                title = "Regístrate",
+                navigate = { navHostController.navigate("registerScreen") })
         }
     }
 }
 
-@Composable
-fun TonalButton(title:String){
-    FilledTonalButton(modifier = Modifier
-        .padding(vertical = 10.dp, horizontal = 20.dp)
-        .fillMaxWidth(),
-        onClick = {
-
-        }) {
-        Text(text = title, fontSize = 28.sp)
-    }
-}
