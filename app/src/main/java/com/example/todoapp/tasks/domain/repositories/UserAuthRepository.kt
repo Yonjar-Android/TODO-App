@@ -1,7 +1,6 @@
 package com.example.todoapp.tasks.domain.repositories
 
 import com.example.todoapp.tasks.data.repositories.CreateUserResult
-import com.example.todoapp.tasks.domain.models.User
 
 interface UserAuthRepository {
 
