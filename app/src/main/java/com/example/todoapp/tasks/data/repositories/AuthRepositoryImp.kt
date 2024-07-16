@@ -1,12 +1,9 @@
 package com.example.todoapp.tasks.data.repositories
 
 import com.example.todoapp.tasks.data.models.UserModel
-import com.example.todoapp.tasks.domain.models.User
 import com.example.todoapp.tasks.domain.repositories.UserAuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -92,7 +89,7 @@ class AuthRepositoryImp @Inject constructor(
         }
     }
 
-    override suspend fun createAuthUser(email: String, password: String): Boolean {
+     suspend fun createAuthUser(email: String, password: String): Boolean{
         return runCatching {
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             true

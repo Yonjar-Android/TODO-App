@@ -9,6 +9,4 @@ interface UserAuthRepository {
 
     suspend fun createUser(name:String, email: String, password: String): CreateUserResult
 
-    suspend  fun createAuthUser(email: String, password: String): Boolean
-
 }
