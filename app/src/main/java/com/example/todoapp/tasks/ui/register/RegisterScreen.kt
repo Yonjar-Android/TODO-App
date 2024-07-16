@@ -3,6 +3,7 @@ package com.example.todoapp.tasks.ui.register
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.example.todoapp.R
 import com.example.todoapp.tasks.domain.models.User
@@ -43,7 +45,6 @@ fun RegisterScreen(
 ) {
 
 
-
     val state = viewModel.state.collectAsState()
 
     val context = LocalContext.current
@@ -53,13 +54,18 @@ fun RegisterScreen(
     var password by rememberSaveable { mutableStateOf("") }
     var repeatPassword by rememberSaveable { mutableStateOf("") }
 
-    Column(
+    ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround,
+            .verticalScroll(rememberScrollState())
     ) {
+
+        val (logo, inputs, button) = createRefs()
+
+        val guidelineTop = createGuidelineFromTop(0.1f)
+        val guidelineBottom = createGuidelineFromBottom(0.02f)
+        val guidelineStart = createGuidelineFromStart(0.3f)
+        val guidelineEnd = createGuidelineFromEnd(0.3f)
 
         ////////////////////
 
@@ -87,9 +93,22 @@ fun RegisterScreen(
             modifier = Modifier
                 .clip(CircleShape)
                 .size(180.dp)
+                .constrainAs(logo) {
+                    top.linkTo(guidelineTop)
+                    start.linkTo(guidelineStart)
+                    end.linkTo(guidelineEnd)
+                }
         )
 
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(inputs) {
+                    top.linkTo(logo.bottom)
+                    bottom.linkTo(button.top)
+                },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             TextFieldComp("Nombre Completo") { name = it }
             TextFieldComp("Correo Electrónico") { email = it }
             TextFieldComp("Contraseña") { password = it }
@@ -97,7 +116,11 @@ fun RegisterScreen(
         }
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .constrainAs(button) {
+                    bottom.linkTo(guidelineBottom)
+                },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TonalButton(title = "Registrar") {
@@ -120,10 +143,16 @@ fun RegisterScreen(
             }
         }
     }
+
 }
 
 @Composable
-fun SuccessFun(context: Context, user: User, navHostController: NavHostController, viewModel: RegisterViewModel) {
+fun SuccessFun(
+    context: Context,
+    user: User,
+    navHostController: NavHostController,
+    viewModel: RegisterViewModel
+) {
     Toast.makeText(context, "Usuario creado exitosamente", Toast.LENGTH_SHORT).show()
 
     navHostController.navigate("loginScreen")

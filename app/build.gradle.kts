@@ -95,6 +95,10 @@ dependencies {
     // Navigation
 
     implementation(libs.androidx.navigation.compose)
+
+    // Constraint Layout
+
+    implementation(libs.androidx.constraintlayout.compose)
 }
 
 kapt {
