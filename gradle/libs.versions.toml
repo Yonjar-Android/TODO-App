@@ -14,11 +14,12 @@ composeBom = "2024.04.01"
 googleGmsGoogleServices = "4.4.2"
 firebaseFirestore = "25.0.0"
 firebaseAuth = "23.0.0"
-mockitoV = "5.7.0"
+mockitoV = "5.2.1"
 turbine = "1.1.0"
 navigationCompose = "2.7.7"
 kotlinxCoroutinesTest = "1.8.0"
 coreSplashscreen = "1.0.1"
+junitJupiter = "5.8.1"
 
 
 
@@ -48,6 +49,7 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoV" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoV" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 
 
 [plugins]
