@@ -62,10 +62,10 @@ fun LogoAndButtons(navHostController: NavHostController) {
         ) {
             TonalButton(
                 title = "Iniciar Sesión",
-                navigate = { navHostController.navigate("loginScreen") })
+                onClick = { navHostController.navigate("loginScreen") })
             TonalButton(
                 title = "Regístrate",
-                navigate = { navHostController.navigate("registerScreen") })
+                onClick = { navHostController.navigate("registerScreen") })
         }
     }
 }

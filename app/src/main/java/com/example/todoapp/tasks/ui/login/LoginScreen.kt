@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.ui.loginAndRegister
+package com.example.todoapp.tasks.ui.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -47,8 +47,8 @@ fun LoginScreen(navHostController: NavHostController) {
             modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComp(labelField = "Correo electrónico")
-            TextFieldComp(labelField = "Contraseña")
+            TextFieldComp(labelField = "Correo electrónico") {}
+            TextFieldComp(labelField = "Contraseña") {}
         }
 
         Column(
