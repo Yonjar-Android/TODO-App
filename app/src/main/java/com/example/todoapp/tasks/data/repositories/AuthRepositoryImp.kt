@@ -5,6 +5,8 @@ import com.example.todoapp.tasks.domain.models.User
 import com.example.todoapp.tasks.domain.repositories.UserAuthRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,13 +20,37 @@ class AuthRepositoryImp @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth
 ) : UserAuthRepository {
-    override suspend fun loginUser(email: String, password: String): User? {
-        return null
+
+    override suspend fun loginUser(email: String, password: String): CreateUserResult{
+        return kotlin.runCatching {
+            firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            // Si el inicio de sesión es exitoso, busca el usuario en Firestore
+            val userSnapshot = firestore.collection("Usuarios").whereEqualTo("email", email)
+                .get()
+                .await()
+            if (userSnapshot.isEmpty) {
+                CreateUserResult.Error("Usuario no encontrado en la base de datos.")
+            } else {
+                // Itera sobre los documentos y convierte cada uno a UserModel
+               val user = userSnapshot.documents[0].toObject(UserModel::class.java)
+                if (user != null) {
+                    CreateUserResult.Success(user.toUser()) // Devuelve el primer usuario encontrado
+                } else {
+                    CreateUserResult.Error("Error al obtener el usuario.")
+                }
+            }
+        }.getOrElse {
+            CreateUserResult.Error("Error al iniciar sesión: ${it.message}")
+        }
     }
 
-    override suspend fun createUser(name: String, email: String, password: String): CreateUserResult {
+    override suspend fun createUser(
+        name: String,
+        email: String,
+        password: String
+    ): CreateUserResult {
 
-        if (checkEmailExists(email)){
+        if (checkEmailExists(email)) {
             return CreateUserResult.Error("El correo ya está registrado")
         }
 
@@ -81,7 +107,7 @@ class AuthRepositoryImp @Inject constructor(
             firestore.collection("Usuarios")
                 .whereEqualTo("email", email)
                 .get()
-                .addOnSuccessListener {querySnapshot ->
+                .addOnSuccessListener { querySnapshot ->
                     continuation.resume(!querySnapshot.isEmpty)
                 }
                 .addOnFailureListener {

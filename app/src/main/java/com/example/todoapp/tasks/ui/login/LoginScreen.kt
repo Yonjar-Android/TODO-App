@@ -1,7 +1,8 @@
 package com.example.todoapp.tasks.ui.login
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,10 +14,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,11 +31,20 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.example.todoapp.R
+import com.example.todoapp.tasks.domain.models.User
+import com.example.todoapp.tasks.ui.Loading
 import com.example.todoapp.tasks.ui.TextFieldComp
 import com.example.todoapp.tasks.ui.TonalButton
+import com.example.todoapp.tasks.ui.errorFun
 
 @Composable
-fun LoginScreen(navHostController: NavHostController) {
+fun LoginScreen(
+    viewModel: LoginViewModel,
+    navHostController: NavHostController
+) {
+
+    val state = viewModel.state.collectAsState()
+    val context = LocalContext.current
 
     ConstraintLayout(
         modifier = Modifier
@@ -36,12 +52,31 @@ fun LoginScreen(navHostController: NavHostController) {
             .verticalScroll(rememberScrollState())
     ) {
 
+        when (val currentSate = state.value) {
+            is LoginState.Error -> {
+                errorFun(context = context, error = currentSate.error ?: "")
+                viewModel.resetState()
+            }
+            LoginState.Initial -> {}
+            LoginState.Loading -> Loading()
+            is LoginState.Success -> {
+                successFun(context, viewModel, navHostController, currentSate.user)
+            }
+        }
+
         val (logo, inputs, button) = createRefs()
 
         val guidelineTop = createGuidelineFromTop(0.1f)
         val guidelineBottom = createGuidelineFromBottom(0.02f)
         val guidelineStart = createGuidelineFromStart(0.3f)
         val guidelineEnd = createGuidelineFromEnd(0.3f)
+
+        var email by rememberSaveable {
+            mutableStateOf("")
+        }
+        var password by rememberSaveable {
+            mutableStateOf("")
+        }
 
         Image(
             painter = painterResource(id = R.drawable.app_logo),
@@ -66,8 +101,8 @@ fun LoginScreen(navHostController: NavHostController) {
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComp(labelField = "Correo electrónico") {}
-            TextFieldComp(labelField = "Contraseña") {}
+            TextFieldComp(labelField = "Correo electrónico") { email = it}
+            TextFieldComp(labelField = "Contraseña") { password = it}
         }
 
         Column(
@@ -78,7 +113,7 @@ fun LoginScreen(navHostController: NavHostController) {
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TonalButton(title = "Ingresar") { }
+            TonalButton(title = "Ingresar") { viewModel.loginUser(email, password) }
 
             TextButton(onClick = {
                 navHostController.navigate("registerScreen")
@@ -91,7 +126,18 @@ fun LoginScreen(navHostController: NavHostController) {
                 )
             }
         }
-
-
     }
+}
+
+fun successFun(
+    context: Context,
+    viewModel: LoginViewModel,
+    navHostController: NavHostController,
+    user: User
+) {
+    Toast.makeText(context, "Bienvenido", Toast.LENGTH_SHORT).show()
+
+    navHostController.navigate("mainTaskScreen/${user.email}")
+
+    viewModel.resetState()
 }
