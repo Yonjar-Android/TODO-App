@@ -89,7 +89,7 @@ class AuthRepositoryImp @Inject constructor(
         }
     }
 
-     suspend fun createAuthUser(email: String, password: String): Boolean{
+     private suspend fun createAuthUser(email: String, password: String): Boolean{
         return runCatching {
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             true
@@ -99,7 +99,7 @@ class AuthRepositoryImp @Inject constructor(
         }
     }
 
-    private suspend fun checkEmailExists(email: String): Boolean {
+     private suspend fun checkEmailExists(email: String): Boolean {
         return suspendCancellableCoroutine { continuation ->
             firestore.collection("Usuarios")
                 .whereEqualTo("email", email)

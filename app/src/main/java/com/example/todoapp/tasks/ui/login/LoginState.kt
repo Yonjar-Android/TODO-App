@@ -1,6 +1,5 @@
 package com.example.todoapp.tasks.ui.login
 
-import android.util.Log
 import com.example.todoapp.tasks.domain.models.User
 
 sealed class LoginState {
