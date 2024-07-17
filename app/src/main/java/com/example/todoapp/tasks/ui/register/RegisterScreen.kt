@@ -3,6 +3,7 @@ package com.example.todoapp.tasks.ui.register
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,32 +59,12 @@ fun RegisterScreen(
             .verticalScroll(rememberScrollState())
     ) {
 
-        val (logo, inputs, button) = createRefs()
+        val (logo, inputs, button,loading) = createRefs()
 
         val guidelineTop = createGuidelineFromTop(0.1f)
         val guidelineBottom = createGuidelineFromBottom(0.02f)
         val guidelineStart = createGuidelineFromStart(0.3f)
         val guidelineEnd = createGuidelineFromEnd(0.3f)
-
-        ////////////////////
-
-        when (val currentState = state.value) {
-
-            is RegisterState.Error -> {
-                errorFun(currentState.error ?: "", context)
-                viewModel.resetState()
-            }
-
-            RegisterState.Loading -> Loading()
-
-            is RegisterState.Success -> {
-                SuccessFun(context, currentState.user, navHostController, viewModel)
-            }
-
-            RegisterState.Initial -> {}
-        }
-
-        /////////////////
 
         Image(
             painter = painterResource(id = R.drawable.app_logo),
@@ -140,8 +121,36 @@ fun RegisterScreen(
                 )
             }
         }
-    }
 
+        ////////////////////
+
+        when (val currentState = state.value) {
+
+            is RegisterState.Error -> {
+                errorFun(currentState.error ?: "", context)
+                viewModel.resetState()
+            }
+
+            RegisterState.Loading -> Box(modifier = Modifier
+                .constrainAs(loading) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                },
+            ) {
+                Loading()
+            }
+
+            is RegisterState.Success -> {
+                SuccessFun(context, currentState.user, navHostController, viewModel)
+            }
+
+            RegisterState.Initial -> {}
+        }
+
+        /////////////////
+    }
 }
 
 @Composable

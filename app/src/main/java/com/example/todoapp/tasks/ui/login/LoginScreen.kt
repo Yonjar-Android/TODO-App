@@ -3,6 +3,8 @@ package com.example.todoapp.tasks.ui.login
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,20 +53,7 @@ fun LoginScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-
-        when (val currentSate = state.value) {
-            is LoginState.Error -> {
-                errorFun(context = context, error = currentSate.error ?: "")
-                viewModel.resetState()
-            }
-            LoginState.Initial -> {}
-            LoginState.Loading -> Loading()
-            is LoginState.Success -> {
-                successFun(context, viewModel, navHostController, currentSate.user)
-            }
-        }
-
-        val (logo, inputs, button) = createRefs()
+        val (logo, inputs, button, loading) = createRefs()
 
         val guidelineTop = createGuidelineFromTop(0.1f)
         val guidelineBottom = createGuidelineFromBottom(0.02f)
@@ -101,8 +90,8 @@ fun LoginScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComp(labelField = "Correo electrónico") { email = it}
-            TextFieldComp(labelField = "Contraseña") { password = it}
+            TextFieldComp(labelField = "Correo electrónico") { email = it }
+            TextFieldComp(labelField = "Contraseña") { password = it }
         }
 
         Column(
@@ -124,6 +113,31 @@ fun LoginScreen(
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold
                 )
+            }
+        }
+
+        when (val currentSate = state.value) {
+            is LoginState.Error -> {
+                errorFun(context = context, error = currentSate.error ?: "")
+                viewModel.resetState()
+            }
+
+            LoginState.Initial -> {}
+            LoginState.Loading -> {
+                Box(modifier = Modifier
+                    .constrainAs(loading) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                    },
+                ) {
+                    Loading()
+                }
+            }
+
+            is LoginState.Success -> {
+                successFun(context, viewModel, navHostController, currentSate.user)
             }
         }
     }
