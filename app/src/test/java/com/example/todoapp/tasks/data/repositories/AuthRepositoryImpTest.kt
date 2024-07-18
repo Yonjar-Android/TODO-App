@@ -6,7 +6,6 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
@@ -120,7 +119,6 @@ class AuthRepositoryImpTest {
         val errorResult = response as CreateUserResult.Error
         assertEquals(errorResult.error, "Error al obtener el usuario.")
     }
-
 
     private fun mockFirestoreUserFound(
         userModel: UserModel? = UserMotherObject.userModel,
