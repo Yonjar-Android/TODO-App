@@ -16,6 +16,8 @@ import com.example.todoapp.tasks.ui.login.LoginScreen
 import com.example.todoapp.tasks.ui.login.LoginViewModel
 import com.example.todoapp.tasks.ui.register.RegisterScreen
 import com.example.todoapp.tasks.ui.register.RegisterViewModel
+import com.example.todoapp.tasks.ui.restPassword.ResetPasswordScreen
+import com.example.todoapp.tasks.ui.restPassword.ResetPasswordViewModel
 import com.example.todoapp.tasks.ui.taskScreen.MainTaskScreen
 import com.example.todoapp.ui.theme.TodoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +28,8 @@ class MainActivity : ComponentActivity() {
     private val registerViewModel: RegisterViewModel by viewModels()
 
     private val loginViewModel: LoginViewModel by viewModels()
+
+    private val resetPasswordViewModel: ResetPasswordViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +69,12 @@ class MainActivity : ComponentActivity() {
                         val email = backStackEntry.arguments?.getString("email")
 
                         MainTaskScreen(navHostController = navController, email = email ?: "")
+                    }
+
+                    composable("resetPasswordScreen"){
+                        BackgroundScreen {
+                            ResetPasswordScreen(resetPasswordViewModel, navController)
+                        }
                     }
 
                 }

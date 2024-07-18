@@ -18,7 +18,7 @@ class AuthRepositoryImp @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : UserAuthRepository {
 
-    override suspend fun loginUser(email: String, password: String): CreateUserResult{
+    override suspend fun loginUser(email: String, password: String): CreateUserResult {
         return kotlin.runCatching {
             firebaseAuth.signInWithEmailAndPassword(email, password).await()
             // Si el inicio de sesión es exitoso, busca el usuario en Firestore
@@ -29,7 +29,7 @@ class AuthRepositoryImp @Inject constructor(
                 CreateUserResult.Error("Usuario no encontrado en la base de datos.")
             } else {
                 // Itera sobre los documentos y convierte cada uno a UserModel
-               val user = userSnapshot.documents[0].toObject(UserModel::class.java)
+                val user = userSnapshot.documents[0].toObject(UserModel::class.java)
                 if (user != null) {
                     CreateUserResult.Success(user.toUser()) // Devuelve el primer usuario encontrado
                 } else {
@@ -89,7 +89,20 @@ class AuthRepositoryImp @Inject constructor(
         }
     }
 
-     private suspend fun createAuthUser(email: String, password: String): Boolean{
+    override suspend fun resetPassword(email: String): ResetResult {
+        return try {
+            if (checkEmailExists(email)){
+                firebaseAuth.sendPasswordResetEmail(email)
+                ResetResult.Success("Se le ha enviado un email para restablecer su contraseña")
+            } else{
+                ResetResult.Error("El correo ingresado no existe")
+            }
+        } catch (e: Exception) {
+            ResetResult.Error(e.message ?: "")// Error message with exception details
+        }
+    }
+
+    private suspend fun createAuthUser(email: String, password: String): Boolean {
         return runCatching {
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             true
@@ -99,7 +112,7 @@ class AuthRepositoryImp @Inject constructor(
         }
     }
 
-     private suspend fun checkEmailExists(email: String): Boolean {
+    private suspend fun checkEmailExists(email: String): Boolean {
         return suspendCancellableCoroutine { continuation ->
             firestore.collection("Usuarios")
                 .whereEqualTo("email", email)

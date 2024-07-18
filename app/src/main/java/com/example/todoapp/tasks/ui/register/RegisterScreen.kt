@@ -62,7 +62,7 @@ fun RegisterScreen(
         val (logo, inputs, button,loading) = createRefs()
 
         val guidelineTop = createGuidelineFromTop(0.1f)
-        val guidelineBottom = createGuidelineFromBottom(0.02f)
+        val guidelineBottom = createGuidelineFromBottom(0.07f)
         val guidelineStart = createGuidelineFromStart(0.3f)
         val guidelineEnd = createGuidelineFromEnd(0.3f)
 
