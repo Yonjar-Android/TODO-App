@@ -102,7 +102,7 @@ fun LoginScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TonalButton(title = "Ingresar") { viewModel.loginUser(email, password) }
+            TonalButton(title = "Ingresar") { viewModel.loginUser(email.lowercase(), password) }
 
             TextButton(onClick = {
                 navHostController.navigate("registerScreen")

@@ -107,7 +107,7 @@ fun RegisterScreen(
                     name = name,
                     password = password,
                     password2 = repeatPassword,
-                    email = email
+                    email = email.lowercase()
                 )
             }
             TextButton(onClick = {
