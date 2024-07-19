@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.ui.register
+package com.example.todoapp.tasks.ui.auth.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

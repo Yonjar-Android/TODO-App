@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.ui.login
+package com.example.todoapp.tasks.ui.auth.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

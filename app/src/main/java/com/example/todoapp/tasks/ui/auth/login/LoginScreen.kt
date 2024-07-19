@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.ui.login
+package com.example.todoapp.tasks.ui.auth.login
 
 import android.content.Context
 import android.widget.Toast

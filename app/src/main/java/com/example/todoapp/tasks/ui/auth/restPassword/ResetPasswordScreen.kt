@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.ui.restPassword
+package com.example.todoapp.tasks.ui.auth.restPassword
 
 import android.widget.Toast
 import androidx.compose.foundation.Image

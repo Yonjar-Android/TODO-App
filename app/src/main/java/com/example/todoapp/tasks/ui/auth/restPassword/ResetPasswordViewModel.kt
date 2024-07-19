@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.ui.restPassword
+package com.example.todoapp.tasks.ui.auth.restPassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
