@@ -10,14 +10,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.todoapp.tasks.ui.home.BackgroundScreen
+import com.example.todoapp.tasks.ui.BackgroundScreen
 import com.example.todoapp.tasks.ui.home.LogoAndButtons
-import com.example.todoapp.tasks.ui.login.LoginScreen
-import com.example.todoapp.tasks.ui.login.LoginViewModel
-import com.example.todoapp.tasks.ui.register.RegisterScreen
-import com.example.todoapp.tasks.ui.register.RegisterViewModel
-import com.example.todoapp.tasks.ui.restPassword.ResetPasswordScreen
-import com.example.todoapp.tasks.ui.restPassword.ResetPasswordViewModel
+import com.example.todoapp.tasks.ui.auth.login.LoginScreen
+import com.example.todoapp.tasks.ui.auth.login.LoginViewModel
+import com.example.todoapp.tasks.ui.auth.register.RegisterScreen
+import com.example.todoapp.tasks.ui.auth.register.RegisterViewModel
+import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordScreen
+import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordViewModel
 import com.example.todoapp.tasks.ui.taskScreen.MainTaskScreen
 import com.example.todoapp.ui.theme.TodoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,10 +41,10 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = "logoAndButtons") {
 
-                    composable("logoAndButtons") { BackgroundScreen { LogoAndButtons(navController) } }
+                    composable("logoAndButtons") { BackgroundScreen(image = R.drawable.app_bg) { LogoAndButtons(navController) } }
 
                     composable("registerScreen") {
-                        BackgroundScreen {
+                        BackgroundScreen(image = R.drawable.app_bg) {
                             RegisterScreen(
                                 navController,
                                 registerViewModel
@@ -53,11 +53,17 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("loginScreen") {
-                        BackgroundScreen {
+                        BackgroundScreen(image = R.drawable.app_bg) {
                             LoginScreen(
                                 loginViewModel,
                                 navController
                             )
+                        }
+                    }
+
+                    composable("resetPasswordScreen"){
+                        BackgroundScreen(image = R.drawable.app_bg) {
+                            ResetPasswordScreen(resetPasswordViewModel, navController)
                         }
                     }
 
@@ -68,15 +74,10 @@ class MainActivity : ComponentActivity() {
                     ) { backStackEntry ->
                         val email = backStackEntry.arguments?.getString("email")
 
-                        MainTaskScreen(navHostController = navController, email = email ?: "")
+                       BackgroundScreen(image = R.drawable.main_bg) {
+                           MainTaskScreen(navHostController = navController, email = email ?: "")
+                       }
                     }
-
-                    composable("resetPasswordScreen"){
-                        BackgroundScreen {
-                            ResetPasswordScreen(resetPasswordViewModel, navController)
-                        }
-                    }
-
                 }
             }
         }

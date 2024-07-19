@@ -2,7 +2,12 @@ package com.example.todoapp.tasks.ui
 
 import android.content.Context
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,11 +22,33 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+@Composable
+fun BackgroundScreen(@DrawableRes image:Int,screen: @Composable () -> Unit) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = image), contentDescription = "background",
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(2.dp),
+            contentScale = ContentScale.Crop,
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.4f))
+        )
+        screen()
+    }
+}
 
 @Composable
 fun TextFieldComp(
@@ -75,7 +102,10 @@ fun TonalButton(title: String, onClick: () -> Unit) {
 
 @Composable
 fun Loading() {
+    Box(Modifier.background(Color.White).padding(5.dp),) {
         CircularProgressIndicator()
+    }
+
 }
 
 fun errorFun(error: String, context: Context) {
