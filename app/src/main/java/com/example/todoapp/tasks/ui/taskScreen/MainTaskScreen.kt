@@ -1,15 +1,7 @@
 package com.example.todoapp.tasks.ui.taskScreen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
@@ -21,13 +13,14 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.R
+import com.example.todoapp.tasks.ui.user.UserScreen
 
 @Composable
 fun MainTaskScreen(
@@ -35,37 +28,28 @@ fun MainTaskScreen(
     email: String
 ) {
 
+    val navigationController = rememberNavController()
+
     Scaffold(
         content = { padding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
+
+            NavHost(
+                modifier = Modifier.padding(padding),
+                navController = navigationController,
+                startDestination = "taskScreen"
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.main_bg),
-                    contentDescription = "background",
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .blur(2.dp),
-                    contentScale = ContentScale.Crop,
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.4f))
-                )
+                composable(route = "taskScreen") {
+                    TaskScreen(email)
+                }
+
+                composable(route = "userScreen") {
+                    UserScreen(navHostController, email)
+                }
             }
-        },
-        bottomBar = { BottomNavTasks(navHostController = navHostController) },
-        floatingActionButton = {
-            MyFAB()
-        },
-        floatingActionButtonPosition = FabPosition.End,
 
-        )
+        },
+        bottomBar = { BottomNavTasks(navHostController = navigationController) })
 }
-
 
 @Composable
 fun BottomNavTasks(navHostController: NavHostController) {
@@ -78,6 +62,7 @@ fun BottomNavTasks(navHostController: NavHostController) {
         NavigationBarItem(selected = navIndex == 0,
             onClick = {
                 navIndex = 0
+                navHostController.navigate("taskScreen")
             }, icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.task_icon),
@@ -89,6 +74,7 @@ fun BottomNavTasks(navHostController: NavHostController) {
         NavigationBarItem(selected = navIndex == 1,
             onClick = {
                 navIndex = 1
+                navHostController.navigate("userScreen")
             }, icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.user_solid),
@@ -99,13 +85,3 @@ fun BottomNavTasks(navHostController: NavHostController) {
     }
 }
 
-@Composable
-fun MyFAB() {
-    FloatingActionButton(
-        onClick = {
-
-        },
-    ) {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add Icon")
-    }
-}
