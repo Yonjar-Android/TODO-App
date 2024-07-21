@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
@@ -28,11 +30,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun BackgroundScreen(@DrawableRes image:Int,screen: @Composable () -> Unit) {
+fun BackgroundScreen(@DrawableRes image: Int, screen: @Composable () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = image), contentDescription = "background",
@@ -53,6 +56,9 @@ fun BackgroundScreen(@DrawableRes image:Int,screen: @Composable () -> Unit) {
 @Composable
 fun TextFieldComp(
     labelField: String,
+    height: Dp = 50.dp,
+    singleL:Boolean = true,
+    maxLin:Int = 1,
     onValueChanged: (String) -> Unit
 ) {
     var text by rememberSaveable {
@@ -78,31 +84,42 @@ fun TextFieldComp(
                 text = it
                 onValueChanged(it)
             },
-            shape = CircleShape,
+            shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .size(height = 50.dp, width = 0.dp),
+                .size(height = height, width = 0.dp),
             textStyle = TextStyle(fontSize = 14.sp),
-            singleLine = true
+            singleLine = singleL,
+            maxLines = maxLin
         )
     }
 }
 
 @Composable
-fun TonalButton(title: String, onClick: () -> Unit) {
+fun TonalButton(
+    title: String,
+    modifier: Modifier = Modifier,
+    color: ButtonColors = ButtonDefaults.buttonColors(containerColor = Color.White),
+    onClick: () -> Unit
+) {
     FilledTonalButton(
-        modifier = Modifier
+        modifier = modifier
             .padding(vertical = 10.dp, horizontal = 20.dp)
             .fillMaxWidth(),
-        onClick = onClick
+        onClick = onClick,
+        colors = color
     ) {
-        Text(text = title, fontSize = 28.sp)
+        Text(text = title, fontSize = 28.sp, color = Color.Black)
     }
 }
 
 @Composable
 fun Loading() {
-    Box(Modifier.background(Color.White).padding(5.dp),) {
+    Box(
+        Modifier
+            .background(Color.White)
+            .padding(5.dp)
+    ) {
         CircularProgressIndicator()
     }
 
