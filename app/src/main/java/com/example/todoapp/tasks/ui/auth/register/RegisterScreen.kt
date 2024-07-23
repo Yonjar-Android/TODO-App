@@ -88,10 +88,10 @@ fun RegisterScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComp("Nombre Completo") { name = it }
-            TextFieldComp("Correo Electrónico") { email = it }
-            TextFieldComp("Contraseña") { password = it }
-            TextFieldComp("Repetir contraseña") { repeatPassword = it }
+            TextFieldComp("Nombre Completo",name) { name = it }
+            TextFieldComp("Correo Electrónico",email) { email = it }
+            TextFieldComp("Contraseña",password) { password = it }
+            TextFieldComp("Repetir contraseña", repeatPassword) { repeatPassword = it }
         }
 
         Column(

@@ -80,7 +80,7 @@ fun ResetPasswordScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComp(labelField = "Correo electrónico") { email = it }
+            TextFieldComp(labelField = "Correo electrónico",email) { email = it }
         }
 
         Column(

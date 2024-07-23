@@ -56,15 +56,12 @@ fun BackgroundScreen(@DrawableRes image: Int, screen: @Composable () -> Unit) {
 @Composable
 fun TextFieldComp(
     labelField: String,
+    text:String,
     height: Dp = 50.dp,
     singleL:Boolean = true,
     maxLin:Int = 1,
     onValueChanged: (String) -> Unit
 ) {
-    var text by rememberSaveable {
-        mutableStateOf("")
-    }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -81,7 +78,6 @@ fun TextFieldComp(
         TextField(
             value = text,
             onValueChange = {
-                text = it
                 onValueChanged(it)
             },
             shape = RoundedCornerShape(20.dp),

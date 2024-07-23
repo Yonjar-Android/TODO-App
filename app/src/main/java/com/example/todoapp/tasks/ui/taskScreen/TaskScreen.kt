@@ -124,19 +124,21 @@ fun TaskScreen(
         }
         // Update fetchedCategories when viewModel state changes
         LaunchedEffect(state.value) {
-                fetchedCategories.value = viewModel.categories
+            fetchedCategories.value = viewModel.categories
         }
 
         when (val currentState = state.value) {
             is TaskScreenState.Error -> {
-                errorFun(currentState.error,context)
+                errorFun(currentState.error, context)
                 viewModel.resetState()
             }
 
             TaskScreenState.Initial -> {}
             TaskScreenState.Loading -> {
-                Box(modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center){
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
                     Loading()
                 }
 
@@ -175,13 +177,13 @@ fun DialogTaskAdd(
 
         val guidelineTop = createGuidelineFromTop(0.05f)
 
+        val resetFields by viewModel.resetFields.collectAsState()
+
         var name by rememberSaveable {
             mutableStateOf("")
         }
 
         var dateState = rememberDatePickerState()
-
-        var resetDatePicker by remember { mutableStateOf(false) }
 
         var category by rememberSaveable {
             mutableStateOf("")
@@ -195,18 +197,14 @@ fun DialogTaskAdd(
             mutableStateOf("")
         }
 
-        LaunchedEffect(viewModel.state.value) {
-            if (viewModel.state.value is TaskScreenState.Success){
-                name = ""
-                category = ""
-                description = ""
-                entregables = ""
-                description = ""
-                resetDatePicker = true
-            }
+        if (resetFields) {
+            name = ""
+            category = ""
+            description = ""
+            entregables = ""
+            description = ""
+            viewModel.cleanFieldHandled()
         }
-
-        if (resetDatePicker) dateState = rememberDatePickerState()
 
         Icon(imageVector = Icons.Filled.Close,
             contentDescription = "Close",
@@ -235,16 +233,17 @@ fun DialogTaskAdd(
 
         ) {
 
-            TextFieldComp(labelField = "Nombre de la tarea") { name = it }
+            TextFieldComp(labelField = "Nombre de la tarea", name) { name = it }
 
             TextFieldComp(
                 "Descripción",
                 height = 120.dp,
                 maxLin = 5,
-                singleL = false
+                singleL = false,
+                text = description
             ) { description = it }
 
-            DropDowsMenuCategories(categories) { category = it }
+            DropDowsMenuCategories(categories, categorySelected = category) { category = it }
 
 
             // Components to manage the date selected
@@ -288,7 +287,8 @@ fun DialogTaskAdd(
                 labelField = "Entregables",
                 maxLin = 4,
                 height = 100.dp,
-                singleL = false
+                singleL = false,
+                text = entregables
             ) {
                 entregables = it
             }
@@ -352,10 +352,13 @@ fun DateFieldComp(date: String) {
 }
 
 @Composable
-fun DropDowsMenuCategories(categories: List<Category>?, categoryValue: (String) -> Unit) {
+fun DropDowsMenuCategories(
+    categories: List<Category>?,
+    categorySelected: String,
+    categoryValue: (String) -> Unit
+) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
-    var selectedCategory by rememberSaveable { mutableStateOf("") }
 
     ExposedDropdownMenuBox(
         modifier = Modifier
@@ -364,7 +367,7 @@ fun DropDowsMenuCategories(categories: List<Category>?, categoryValue: (String) 
         expanded = expanded,
         onExpandedChange = { expanded = !expanded }) {
         TextField(
-            value = selectedCategory,
+            value = categorySelected,
             onValueChange = {}, // Read-only, updates on selection from dropdown
             readOnly = true,
             label = { Text("Category") },
@@ -383,9 +386,8 @@ fun DropDowsMenuCategories(categories: List<Category>?, categoryValue: (String) 
                 DropdownMenuItem(
                     text = { Text(category.name) },
                     onClick = {
-                        selectedCategory = category.name
                         expanded = false
-                        categoryValue(selectedCategory)
+                        categoryValue(category.name)
                     }
                 )
             }

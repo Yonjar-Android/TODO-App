@@ -26,6 +26,9 @@ class TaskScreenViewModel @Inject constructor(
     private var _showToast = MutableStateFlow(false)
     val showToast: StateFlow<Boolean> = _showToast
 
+    private val _resetFields = MutableStateFlow(false)
+    val resetFields: StateFlow<Boolean> = _resetFields
+
     var categories: List<Category>? = listOf()
 
     fun getCategories() {
@@ -47,6 +50,7 @@ class TaskScreenViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun createTask(
         name: String,
         description: String?,
@@ -89,6 +93,7 @@ class TaskScreenViewModel @Inject constructor(
 
                             is TaskResult.Success -> {
                                 _state.value = TaskScreenState.Success(response.message, categories)
+                                _resetFields.value = true
                             }
                         }
                     }
@@ -131,5 +136,9 @@ class TaskScreenViewModel @Inject constructor(
     fun resetState() {
         _state.value = TaskScreenState.Initial
         _showToast.value = false // Reset flag to hide Toast
+    }
+
+    fun cleanFieldHandled() {
+        _resetFields.value = false
     }
 }

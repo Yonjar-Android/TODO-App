@@ -89,8 +89,8 @@ fun LoginScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComp(labelField = "Correo electrónico") { email = it }
-            TextFieldComp(labelField = "Contraseña") { password = it }
+            TextFieldComp(labelField = "Correo electrónico",email) { email = it }
+            TextFieldComp(labelField = "Contraseña",password) { password = it }
             TextButton(onClick = {
                 navHostController.navigate("resetPasswordScreen")
             }) {
