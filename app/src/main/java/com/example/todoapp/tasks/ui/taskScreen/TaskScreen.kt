@@ -111,6 +111,7 @@ fun TaskScreen(
 
         if (show) {
             DialogTaskAdd(
+                viewModel = viewModel,
                 closeDate = {
                     showDate = !showDate
                 },
@@ -127,18 +128,20 @@ fun TaskScreen(
             }
         }
 
-        when(val currentState = state.value){
+        when (val currentState = state.value) {
             is TaskScreenState.Error -> {
 
             }
+
             TaskScreenState.Initial -> {}
             TaskScreenState.Loading -> {
                 Loading()
             }
+
             is TaskScreenState.Success -> {
-                if (showToast.value){
-                    if (currentState.message.isNotBlank()){
-                        Toast.makeText(context,currentState.message,Toast.LENGTH_SHORT).show()
+                if (showToast.value) {
+                    if (currentState.message.isNotBlank()) {
+                        Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
                         viewModel.resetShowToast()
                     }
                 }
@@ -151,7 +154,13 @@ fun TaskScreen(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DialogTaskAdd(close: () -> Unit, closeDate: () -> Unit, showDate: Boolean,categories:List<Category>?) {
+fun DialogTaskAdd(
+    viewModel: TaskScreenViewModel,
+    close: () -> Unit,
+    closeDate: () -> Unit,
+    showDate: Boolean,
+    categories: List<Category>?
+) {
 
     ConstraintLayout(
         modifier = Modifier
@@ -217,7 +226,7 @@ fun DialogTaskAdd(close: () -> Unit, closeDate: () -> Unit, showDate: Boolean,ca
                 singleL = false
             ) { description = it }
 
-            DropDowsMenuCategories(categories){ category = it }
+            DropDowsMenuCategories(categories) { category = it }
 
 
             // Components to manage the date selected
@@ -273,7 +282,15 @@ fun DialogTaskAdd(close: () -> Unit, closeDate: () -> Unit, showDate: Boolean,ca
                 color = ButtonDefaults.buttonColors(containerColor = Color(0xFF6E56FD))
             )
             {
-
+                viewModel.createTask(
+                    name = name,
+                    description = description,
+                    date = dateToString,
+                    check = false,
+                    deliverables = listOf(),
+                    deliverablesDescription = entregables,
+                    users = listOf()
+                )
             }
         }
     }
@@ -316,7 +333,7 @@ fun DateFieldComp(date: String) {
 }
 
 @Composable
-fun DropDowsMenuCategories(categories: List<Category>?, categoryValue: (String)-> Unit) {
+fun DropDowsMenuCategories(categories: List<Category>?, categoryValue: (String) -> Unit) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
     var selectedCategory by rememberSaveable { mutableStateOf("") }
@@ -333,7 +350,7 @@ fun DropDowsMenuCategories(categories: List<Category>?, categoryValue: (String)-
             readOnly = true,
             label = { Text("Category") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier  = Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .size(height = 60.dp, width = 0.dp)
                 .menuAnchor(),

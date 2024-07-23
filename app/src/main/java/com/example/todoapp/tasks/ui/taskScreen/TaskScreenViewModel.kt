@@ -3,6 +3,7 @@ package com.example.todoapp.tasks.ui.taskScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
+import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
 import com.example.todoapp.tasks.domain.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +35,43 @@ class TaskScreenViewModel @Inject constructor(
                     is CategoryResult.Success -> {
                         categories = response.categories
                         _state.value = TaskScreenState.Success("", response.categories)
+                        _showToast.value = true
+                    }
+                }
+            } catch (e: Exception) {
+                _state.value = TaskScreenState.Error("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun createTask(
+        name: String,
+        description: String?,
+        date: String,
+        check: Boolean = false,
+        deliverablesDescription: String?,
+        deliverables: List<String> = listOf(),
+        users: List<String> = listOf()
+    ) {
+        viewModelScope.launch {
+            try {
+                val response =
+                    repositoryImp.createTask(
+                        name = name,
+                        description = description,
+                        date = date,
+                        check = check,
+                        deliverables = deliverables,
+                        deliverablesDescription = deliverablesDescription,
+                        users = users
+                    )
+
+                when(response){
+                    is TaskResult.Error -> {
+                        _state.value = TaskScreenState.Error("Error: ${response.error}")
+                    }
+                    is TaskResult.Success -> {
+                        _state.value = TaskScreenState.Success(response.message, categories)
                         _showToast.value = true
                     }
                 }

@@ -1,6 +1,7 @@
 package com.example.todoapp.tasks.data.repositories.taskRepository
 
 import com.example.todoapp.tasks.data.models.CategoryModel
+import com.example.todoapp.tasks.data.models.TaskModel
 import com.example.todoapp.tasks.domain.models.Category
 import com.example.todoapp.tasks.domain.repositories.TasksRepository
 import com.google.firebase.firestore.DocumentSnapshot
@@ -27,6 +28,40 @@ class TasksRepositoryImp @Inject constructor(
                     continuation.resume(CategoryResult.Error(it.message ?: ""))
                 }
         }
+    }
+
+    override suspend fun createTask(
+        name: String,
+        description: String?,
+        date: String,
+        check: Boolean,
+        deliverablesDescription: String?,
+        deliverables: List<String>,
+        users: List<String>
+    ): TaskResult {
+
+        val task = TaskModel(
+            name = name,
+            description = description ?: "",
+            date = date,
+            check = check,
+            users = users,
+            deliverablesDesc = deliverablesDescription ?: "",
+            deliverables = deliverables
+        )
+
+        return suspendCancellableCoroutine { continuation ->
+
+
+            firestore.collection("Tareas").add(task)
+                .addOnSuccessListener {
+                    continuation.resume(TaskResult.Success("Se ha creado la tarea con éxito"))
+                }.addOnFailureListener{
+                    println("Error: ${it.message}")
+                    continuation.resume(TaskResult.Error(it.message ?: ""))
+                }
+        }
+
     }
 
     private fun convertCategories(documents: MutableList<DocumentSnapshot>): List<Category> {
