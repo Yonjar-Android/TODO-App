@@ -50,28 +50,41 @@ class TaskScreenViewModel @Inject constructor(
         check: Boolean = false,
         deliverablesDescription: String?,
         deliverables: List<String> = listOf(),
-        users: List<String> = listOf()
+        users: List<String> = listOf(),
+        category: String
     ) {
         viewModelScope.launch {
             _state.value = TaskScreenState.Loading
             try {
-                val response =
-                    repositoryImp.createTask(
-                        name = name,
-                        description = description,
-                        date = date,
-                        check = check,
-                        deliverables = deliverables,
-                        deliverablesDescription = deliverablesDescription,
-                        users = users
-                    )
+                val categoryReference = repositoryImp.getCategoryReference(category)
 
-                when(response){
+                when (categoryReference) {
                     is TaskResult.Error -> {
-                        _state.value = TaskScreenState.Error("Error: ${response.error}")
+                        _state.value = TaskScreenState.Error("Error: ${categoryReference.error}")
                     }
+
                     is TaskResult.Success -> {
-                        _state.value = TaskScreenState.Success(response.message, categories)
+                        val response =
+                            repositoryImp.createTask(
+                                name = name,
+                                description = description,
+                                date = date,
+                                check = check,
+                                deliverables = deliverables,
+                                deliverablesDescription = deliverablesDescription,
+                                users = users,
+                                category = categoryReference.documentReference!!
+                            )
+
+                        when (response) {
+                            is TaskResult.Error -> {
+                                _state.value = TaskScreenState.Error("Error: ${response.error}")
+                            }
+
+                            is TaskResult.Success -> {
+                                _state.value = TaskScreenState.Success(response.message, categories)
+                            }
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -81,8 +94,7 @@ class TaskScreenViewModel @Inject constructor(
         }
     }
 
-    fun resetState(){
-        _state.value = TaskScreenState.Initial
+    fun resetState() {
         _showToast.value = false // Reset flag to hide Toast
     }
 }

@@ -1,6 +1,7 @@
 package com.example.todoapp.tasks.data.models
 
 import com.example.todoapp.tasks.domain.models.TaskDom
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.PropertyName
 
 data class TaskModel(
@@ -11,6 +12,7 @@ data class TaskModel(
     @PropertyName("deliverablesDescription") val deliverablesDesc:String = "",
     @PropertyName("deliverables") val deliverables:List<String> = listOf(),
     @PropertyName("usersAssigned") val users:List<String> = listOf(),
+    @PropertyName("category") val category:DocumentReference? = null
 ){
     fun toTask():TaskDom{
         return TaskDom(
@@ -20,7 +22,8 @@ data class TaskModel(
             date = date,
             deliverablesDesc = deliverablesDesc,
             deliverables = deliverables,
-            users = users
+            users = users,
+            category = category
         )
     }
 }

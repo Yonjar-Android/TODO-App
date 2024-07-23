@@ -294,7 +294,8 @@ fun DialogTaskAdd(
                     check = false,
                     deliverables = listOf(),
                     deliverablesDescription = entregables,
-                    users = listOf()
+                    users = listOf(),
+                    category = category
                 )
             }
         }

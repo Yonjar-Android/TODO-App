@@ -4,6 +4,7 @@ import com.example.todoapp.tasks.data.models.CategoryModel
 import com.example.todoapp.tasks.data.models.TaskModel
 import com.example.todoapp.tasks.domain.models.Category
 import com.example.todoapp.tasks.domain.repositories.TasksRepository
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -30,6 +31,24 @@ class TasksRepositoryImp @Inject constructor(
         }
     }
 
+    override suspend fun getCategoryReference(name: String): TaskResult {
+        return suspendCancellableCoroutine { continuation ->
+            firestore.collection("Categorias")
+                .whereEqualTo("name", name)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.isEmpty){
+                        continuation.resume(TaskResult.Error("Categoria no encontrada"))
+                    } else{
+                        continuation.resume(TaskResult.Success("",querySnapshot.documents[0].reference))
+                    }
+
+                }.addOnFailureListener{
+                    continuation.resume(TaskResult.Error(it.message ?: ""))
+                }
+        }
+    }
+
     override suspend fun createTask(
         name: String,
         description: String?,
@@ -37,7 +56,8 @@ class TasksRepositoryImp @Inject constructor(
         check: Boolean,
         deliverablesDescription: String?,
         deliverables: List<String>,
-        users: List<String>
+        users: List<String>,
+        category: DocumentReference
     ): TaskResult {
 
         val task = TaskModel(
@@ -47,7 +67,8 @@ class TasksRepositoryImp @Inject constructor(
             check = check,
             users = users,
             deliverablesDesc = deliverablesDescription ?: "",
-            deliverables = deliverables
+            deliverables = deliverables,
+            category = category
         )
 
         return suspendCancellableCoroutine { continuation ->
