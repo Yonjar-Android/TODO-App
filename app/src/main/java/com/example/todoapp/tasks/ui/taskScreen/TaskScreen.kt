@@ -124,9 +124,7 @@ fun TaskScreen(
         }
         // Update fetchedCategories when viewModel state changes
         LaunchedEffect(state.value) {
-            if (state.value is TaskScreenState.Success) {
-                fetchedCategories.value = (state.value as TaskScreenState.Success).categories
-            }
+                fetchedCategories.value = viewModel.categories
         }
 
         when (val currentState = state.value) {
@@ -183,6 +181,8 @@ fun DialogTaskAdd(
 
         var dateState = rememberDatePickerState()
 
+        var resetDatePicker by remember { mutableStateOf(false) }
+
         var category by rememberSaveable {
             mutableStateOf("")
         }
@@ -194,6 +194,19 @@ fun DialogTaskAdd(
         var entregables by rememberSaveable {
             mutableStateOf("")
         }
+
+        LaunchedEffect(viewModel.state.value) {
+            if (viewModel.state.value is TaskScreenState.Success){
+                name = ""
+                category = ""
+                description = ""
+                entregables = ""
+                description = ""
+                resetDatePicker = true
+            }
+        }
+
+        if (resetDatePicker) dateState = rememberDatePickerState()
 
         Icon(imageVector = Icons.Filled.Close,
             contentDescription = "Close",

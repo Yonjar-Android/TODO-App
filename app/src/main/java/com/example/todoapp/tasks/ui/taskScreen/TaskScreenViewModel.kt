@@ -10,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +24,7 @@ class TaskScreenViewModel @Inject constructor(
     private var _showToast = MutableStateFlow(false)
     val showToast: StateFlow<Boolean> = _showToast
 
-    private var categories: List<Category>? = listOf()
+    var categories: List<Category>? = listOf()
 
     fun getCategories() {
         viewModelScope.launch {
@@ -56,6 +58,8 @@ class TaskScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = TaskScreenState.Loading
             try {
+                if (!validations(name, date, category)) return@launch
+
                 val categoryReference = repositoryImp.getCategoryReference(category)
 
                 when (categoryReference) {
@@ -90,11 +94,39 @@ class TaskScreenViewModel @Inject constructor(
             } catch (e: Exception) {
                 _state.value = TaskScreenState.Error("Error: ${e.message}")
             }
-            _showToast.value = true
         }
     }
 
+    private fun validations(name: String, date: String, category: String):Boolean{
+        _showToast.value = true
+        if (name.isBlank()){
+            _state.value = TaskScreenState.Error("Rellene el campo nombre")
+            return false
+        }
+        if (category.isBlank()){
+            _state.value = TaskScreenState.Error("Seleccione una categoría")
+            return false
+        }
+        if (date.isBlank()){
+            _state.value = TaskScreenState.Error("Seleccione una fecha")
+            return false
+        }
+
+        // Date Validation
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy") // Match your date formatval taskDate = LocalDate.parse(date, formatter)
+        val today = LocalDate.now()
+        val dateSelected = LocalDate.parse(date,formatter)
+
+        if (dateSelected.isBefore(today)) {
+            _state.value = TaskScreenState.Error("No puede seleccionar una fecha anterior a hoy")
+            return false
+        }
+
+        return true
+    }
+
     fun resetState() {
+        _state.value = TaskScreenState.Initial
         _showToast.value = false // Reset flag to hide Toast
     }
 }
