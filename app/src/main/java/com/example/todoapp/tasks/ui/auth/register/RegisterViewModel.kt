@@ -2,8 +2,8 @@ package com.example.todoapp.tasks.ui.auth.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.tasks.data.repositories.AuthRepositoryImp
-import com.example.todoapp.tasks.data.repositories.CreateUserResult
+import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
+import com.example.todoapp.tasks.data.repositories.authRepository.CreateUserResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

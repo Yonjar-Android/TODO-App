@@ -2,8 +2,8 @@ package com.example.todoapp.tasks.ui.restPassword
 
 import app.cash.turbine.test
 import com.example.todoapp.TestCoroutineRule
-import com.example.todoapp.tasks.data.repositories.AuthRepositoryImp
-import com.example.todoapp.tasks.data.repositories.ResetResult
+import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
+import com.example.todoapp.tasks.data.repositories.authRepository.ResetResult
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordState
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

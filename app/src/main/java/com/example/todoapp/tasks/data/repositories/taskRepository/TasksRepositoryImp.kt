@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.data.repositories
+package com.example.todoapp.tasks.data.repositories.taskRepository
 
 import com.example.todoapp.tasks.data.models.CategoryModel
 import com.example.todoapp.tasks.domain.models.Category

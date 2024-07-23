@@ -3,7 +3,7 @@ package com.example.todoapp.tasks.ui.login
 import app.cash.turbine.test
 import com.example.todoapp.TestCoroutineRule
 import com.example.todoapp.motherObject.UserMotherObject
-import com.example.todoapp.tasks.data.repositories.AuthRepositoryImp
+import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
 import com.example.todoapp.tasks.ui.auth.login.LoginState
 import com.example.todoapp.tasks.ui.auth.login.LoginViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

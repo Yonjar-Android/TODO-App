@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.data.repositories
+package com.example.todoapp.tasks.data.repositories.authRepository
 
 import com.example.todoapp.tasks.data.models.UserModel
 import com.example.todoapp.tasks.domain.repositories.UserAuthRepository

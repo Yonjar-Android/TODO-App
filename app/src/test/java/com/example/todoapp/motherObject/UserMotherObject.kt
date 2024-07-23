@@ -1,7 +1,7 @@
 package com.example.todoapp.motherObject
 
 import com.example.todoapp.tasks.data.models.UserModel
-import com.example.todoapp.tasks.data.repositories.CreateUserResult
+import com.example.todoapp.tasks.data.repositories.authRepository.CreateUserResult
 
 object UserMotherObject {
     val userModel = UserModel(

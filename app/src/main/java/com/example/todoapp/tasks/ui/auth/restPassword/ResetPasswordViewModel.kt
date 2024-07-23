@@ -2,8 +2,8 @@ package com.example.todoapp.tasks.ui.auth.restPassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.tasks.data.repositories.AuthRepositoryImp
-import com.example.todoapp.tasks.data.repositories.ResetResult
+import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
+import com.example.todoapp.tasks.data.repositories.authRepository.ResetResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
-    private val repositoryImp: AuthRepositoryImp) :
+    private val repositoryImp: AuthRepositoryImp
+) :
     ViewModel() {
 
     private val _state = MutableStateFlow<ResetPasswordState>(ResetPasswordState.Initial)

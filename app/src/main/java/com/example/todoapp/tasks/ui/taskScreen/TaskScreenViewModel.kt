@@ -2,8 +2,8 @@ package com.example.todoapp.tasks.ui.taskScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.tasks.data.repositories.CategoryResult
-import com.example.todoapp.tasks.data.repositories.TasksRepositoryImp
+import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
+import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
 import com.example.todoapp.tasks.domain.models.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

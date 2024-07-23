@@ -2,6 +2,8 @@ package com.example.todoapp.tasks.data.repositories
 
 import com.example.todoapp.motherObject.UserMotherObject
 import com.example.todoapp.tasks.data.models.UserModel
+import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
+import com.example.todoapp.tasks.data.repositories.authRepository.CreateUserResult
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
