@@ -35,7 +35,6 @@ class TaskScreenViewModel @Inject constructor(
                     is CategoryResult.Success -> {
                         categories = response.categories
                         _state.value = TaskScreenState.Success("", response.categories)
-                        _showToast.value = true
                     }
                 }
             } catch (e: Exception) {
@@ -54,6 +53,7 @@ class TaskScreenViewModel @Inject constructor(
         users: List<String> = listOf()
     ) {
         viewModelScope.launch {
+            _state.value = TaskScreenState.Loading
             try {
                 val response =
                     repositoryImp.createTask(
@@ -72,16 +72,17 @@ class TaskScreenViewModel @Inject constructor(
                     }
                     is TaskResult.Success -> {
                         _state.value = TaskScreenState.Success(response.message, categories)
-                        _showToast.value = true
                     }
                 }
             } catch (e: Exception) {
                 _state.value = TaskScreenState.Error("Error: ${e.message}")
             }
+            _showToast.value = true
         }
     }
 
-    fun resetShowToast() {
+    fun resetState(){
+        _state.value = TaskScreenState.Initial
         _showToast.value = false // Reset flag to hide Toast
     }
 }

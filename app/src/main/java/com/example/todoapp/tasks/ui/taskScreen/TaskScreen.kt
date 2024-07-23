@@ -58,6 +58,7 @@ import com.example.todoapp.tasks.ui.DateUtilsClass
 import com.example.todoapp.tasks.ui.Loading
 import com.example.todoapp.tasks.ui.TextFieldComp
 import com.example.todoapp.tasks.ui.TonalButton
+import com.example.todoapp.tasks.ui.errorFun
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -130,22 +131,26 @@ fun TaskScreen(
 
         when (val currentState = state.value) {
             is TaskScreenState.Error -> {
-
+                errorFun(currentState.error,context)
+                viewModel.resetState()
             }
 
             TaskScreenState.Initial -> {}
             TaskScreenState.Loading -> {
-                Loading()
+                Box(modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center){
+                    Loading()
+                }
+
             }
 
             is TaskScreenState.Success -> {
                 if (showToast.value) {
                     if (currentState.message.isNotBlank()) {
                         Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
-                        viewModel.resetShowToast()
                     }
                 }
-
+                viewModel.resetState()
             }
         }
 
