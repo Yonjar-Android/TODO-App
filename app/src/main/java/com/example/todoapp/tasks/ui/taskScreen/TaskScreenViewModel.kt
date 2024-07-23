@@ -1,5 +1,7 @@
 package com.example.todoapp.tasks.ui.taskScreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
@@ -97,6 +99,7 @@ class TaskScreenViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun validations(name: String, date: String, category: String):Boolean{
         _showToast.value = true
         if (name.isBlank()){
