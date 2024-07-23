@@ -1,10 +1,12 @@
 package com.example.todoapp
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +21,7 @@ import com.example.todoapp.tasks.ui.auth.register.RegisterViewModel
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordScreen
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordViewModel
 import com.example.todoapp.tasks.ui.taskScreen.MainTaskScreen
+import com.example.todoapp.tasks.ui.taskScreen.TaskScreenViewModel
 import com.example.todoapp.ui.theme.TodoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,6 +34,9 @@ class MainActivity : ComponentActivity() {
 
     private val resetPasswordViewModel: ResetPasswordViewModel by viewModels()
 
+    private val taskScreenViewModel: TaskScreenViewModel by viewModels()
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -41,7 +47,13 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(navController = navController, startDestination = "logoAndButtons") {
 
-                    composable("logoAndButtons") { BackgroundScreen(image = R.drawable.app_bg) { LogoAndButtons(navController) } }
+                    composable("logoAndButtons") {
+                        BackgroundScreen(image = R.drawable.app_bg) {
+                            LogoAndButtons(
+                                navController
+                            )
+                        }
+                    }
 
                     composable("registerScreen") {
                         BackgroundScreen(image = R.drawable.app_bg) {
@@ -61,22 +73,27 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    composable("resetPasswordScreen"){
+                    composable("resetPasswordScreen") {
                         BackgroundScreen(image = R.drawable.app_bg) {
                             ResetPasswordScreen(resetPasswordViewModel, navController)
                         }
                     }
 
-                    composable(route = "mainTaskScreen/{email}", arguments = listOf(
-                        navArgument("email") {
-                            type = NavType.StringType
-                        })
+                    composable(
+                        route = "mainTaskScreen/{email}", arguments = listOf(
+                            navArgument("email") {
+                                type = NavType.StringType
+                            })
                     ) { backStackEntry ->
                         val email = backStackEntry.arguments?.getString("email")
 
-                       BackgroundScreen(image = R.drawable.main_bg) {
-                           MainTaskScreen(navHostController = navController, email = email ?: "")
-                       }
+                        BackgroundScreen(image = R.drawable.main_bg) {
+                            MainTaskScreen(
+                                navHostController = navController,
+                                email = email ?: "",
+                                taskScreenViewModel = taskScreenViewModel
+                            )
+                        }
                     }
                 }
             }

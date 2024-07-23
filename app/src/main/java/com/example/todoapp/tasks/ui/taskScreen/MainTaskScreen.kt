@@ -1,5 +1,7 @@
 package com.example.todoapp.tasks.ui.taskScreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -22,10 +24,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.R
 import com.example.todoapp.tasks.ui.user.UserScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainTaskScreen(
     navHostController: NavHostController,
-    email: String
+    email: String,
+    taskScreenViewModel: TaskScreenViewModel
 ) {
 
     val navigationController = rememberNavController()
@@ -39,7 +43,7 @@ fun MainTaskScreen(
                 startDestination = "taskScreen"
             ) {
                 composable(route = "taskScreen") {
-                    TaskScreen(email)
+                    TaskScreen(email,taskScreenViewModel)
                 }
 
                 composable(route = "userScreen") {

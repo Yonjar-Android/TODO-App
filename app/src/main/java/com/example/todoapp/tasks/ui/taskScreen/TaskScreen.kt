@@ -3,6 +3,7 @@
 package com.example.todoapp.tasks.ui.taskScreen
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,27 +35,49 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.todoapp.R
+import com.example.todoapp.tasks.domain.models.Category
 import com.example.todoapp.tasks.ui.BackgroundScreen
 import com.example.todoapp.tasks.ui.DateUtilsClass
+import com.example.todoapp.tasks.ui.Loading
 import com.example.todoapp.tasks.ui.TextFieldComp
 import com.example.todoapp.tasks.ui.TonalButton
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TaskScreen(email: String) {
+fun TaskScreen(
+    email: String,
+    viewModel: TaskScreenViewModel
+) {
+
+    val state = viewModel.state.collectAsState()
+    val context = LocalContext.current
+
+    // State to hold fetched categories
+    val fetchedCategories = rememberSaveable { mutableStateOf<List<Category>?>(null) }
+
+    // Fetch categories once when the screen is composed
+    LaunchedEffect(Unit) {
+        viewModel.getCategories()
+    }
+
+    val showToast = viewModel.showToast.collectAsState()
 
     var show by rememberSaveable {
         mutableStateOf(false)
@@ -85,6 +108,7 @@ fun TaskScreen(email: String) {
 
             floatingActionButtonPosition = FabPosition.End
         )
+
         if (show) {
             DialogTaskAdd(
                 closeDate = {
@@ -92,15 +116,42 @@ fun TaskScreen(email: String) {
                 },
                 close = {
                     show = false
-                }, showDate = showDate
+                }, showDate = showDate,
+                categories = fetchedCategories.value
             )
         }
+        // Update fetchedCategories when viewModel state changes
+        LaunchedEffect(state.value) {
+            if (state.value is TaskScreenState.Success) {
+                fetchedCategories.value = (state.value as TaskScreenState.Success).categories
+            }
+        }
+
+        when(val currentState = state.value){
+            is TaskScreenState.Error -> {
+
+            }
+            TaskScreenState.Initial -> {}
+            TaskScreenState.Loading -> {
+                Loading()
+            }
+            is TaskScreenState.Success -> {
+                if (showToast.value){
+                    if (currentState.message.isNotBlank()){
+                        Toast.makeText(context,currentState.message,Toast.LENGTH_SHORT).show()
+                        viewModel.resetShowToast()
+                    }
+                }
+
+            }
+        }
+
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DialogTaskAdd(close: () -> Unit, closeDate: () -> Unit, showDate: Boolean) {
+fun DialogTaskAdd(close: () -> Unit, closeDate: () -> Unit, showDate: Boolean,categories:List<Category>?) {
 
     ConstraintLayout(
         modifier = Modifier
@@ -166,7 +217,7 @@ fun DialogTaskAdd(close: () -> Unit, closeDate: () -> Unit, showDate: Boolean) {
                 singleL = false
             ) { description = it }
 
-            DropDowsMenuCategories()
+            DropDowsMenuCategories(categories){ category = it }
 
 
             // Components to manage the date selected
@@ -265,12 +316,10 @@ fun DateFieldComp(date: String) {
 }
 
 @Composable
-fun DropDowsMenuCategories() {
+fun DropDowsMenuCategories(categories: List<Category>?, categoryValue: (String)-> Unit) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
     var selectedCategory by rememberSaveable { mutableStateOf("") }
-
-    val categories = listOf("Personal", "Work", "Shopping", "Other")
 
     ExposedDropdownMenuBox(
         modifier = Modifier
@@ -286,19 +335,21 @@ fun DropDowsMenuCategories() {
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier  = Modifier
                 .fillMaxWidth()
-                .size(height = 60.dp, width = 0.dp).menuAnchor(),
+                .size(height = 60.dp, width = 0.dp)
+                .menuAnchor(),
             shape = RoundedCornerShape(20.dp)
         )
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            categories.forEach { category ->
+            categories?.forEach { category ->
                 DropdownMenuItem(
-                    text = { Text(category) },
+                    text = { Text(category.name) },
                     onClick = {
-                        selectedCategory = category
+                        selectedCategory = category.name
                         expanded = false
+                        categoryValue(selectedCategory)
                     }
                 )
             }
