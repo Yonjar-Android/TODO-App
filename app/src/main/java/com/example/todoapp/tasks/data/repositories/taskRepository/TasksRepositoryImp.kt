@@ -14,6 +14,7 @@ import kotlin.coroutines.resume
 class TasksRepositoryImp @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : TasksRepository {
+
     override suspend fun getAllCategories(): CategoryResult {
 
         return suspendCancellableCoroutine { continuation ->
@@ -37,13 +38,18 @@ class TasksRepositoryImp @Inject constructor(
                 .whereEqualTo("name", name)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
-                    if (querySnapshot.isEmpty){
+                    if (querySnapshot.isEmpty) {
                         continuation.resume(TaskResult.Error("Categoria no encontrada"))
-                    } else{
-                        continuation.resume(TaskResult.Success("",querySnapshot.documents[0].reference))
+                    } else {
+                        continuation.resume(
+                            TaskResult.Success(
+                                "",
+                                querySnapshot.documents[0].reference
+                            )
+                        )
                     }
 
-                }.addOnFailureListener{
+                }.addOnFailureListener {
                     continuation.resume(TaskResult.Error(it.message ?: ""))
                 }
         }
@@ -77,7 +83,7 @@ class TasksRepositoryImp @Inject constructor(
             firestore.collection("Tareas").add(task)
                 .addOnSuccessListener {
                     continuation.resume(TaskResult.Success("Se ha creado la tarea con éxito"))
-                }.addOnFailureListener{
+                }.addOnFailureListener {
                     println("Error: ${it.message}")
                     continuation.resume(TaskResult.Error(it.message ?: ""))
                 }

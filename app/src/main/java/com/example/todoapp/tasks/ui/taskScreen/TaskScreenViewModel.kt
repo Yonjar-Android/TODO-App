@@ -61,8 +61,9 @@ class TaskScreenViewModel @Inject constructor(
         users: List<String> = listOf(),
         category: String
     ) {
+        _state.value = TaskScreenState.Loading
+
         viewModelScope.launch {
-            _state.value = TaskScreenState.Loading
             try {
                 if (!validations(name, date, category)) return@launch
 
