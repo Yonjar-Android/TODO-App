@@ -1,4 +1,4 @@
-package com.example.todoapp.tasks.ui.taskScreen
+package com.example.todoapp.tasks.ui.taskScreen.tasks
 
 sealed class TaskScreenState {
     data object Loading : TaskScreenState()

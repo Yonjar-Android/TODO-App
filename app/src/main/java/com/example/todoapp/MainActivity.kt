@@ -21,7 +21,7 @@ import com.example.todoapp.tasks.ui.auth.register.RegisterViewModel
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordScreen
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordViewModel
 import com.example.todoapp.tasks.ui.taskScreen.MainTaskScreen
-import com.example.todoapp.tasks.ui.taskScreen.TaskScreenViewModel
+import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenViewModel
 import com.example.todoapp.ui.theme.TodoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 

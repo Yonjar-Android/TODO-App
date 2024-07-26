@@ -5,6 +5,8 @@ import com.example.todoapp.TestCoroutineRule
 import com.example.todoapp.motherObject.TaskMotherObject
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
+import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenState
+import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenViewModel
 import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle

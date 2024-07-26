@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.todoapp.tasks.ui.taskScreen
+package com.example.todoapp.tasks.ui.taskScreen.tasks
 
 import android.os.Build
 import android.widget.Toast
