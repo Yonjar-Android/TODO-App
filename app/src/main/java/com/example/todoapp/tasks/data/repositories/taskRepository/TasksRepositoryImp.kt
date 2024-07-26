@@ -81,7 +81,9 @@ class TasksRepositoryImp @Inject constructor(
         return suspendCancellableCoroutine { continuation ->
 
 
-            firestore.collection("Tareas").add(task)
+            val documentReference = firestore.collection("Tareas").document()
+
+                documentReference.set((task.copy(taskId = documentReference.id)))
                 .addOnSuccessListener {
                     continuation.resume(TaskResult.Success("Se ha creado la tarea con éxito"))
                 }.addOnFailureListener {
@@ -119,6 +121,20 @@ class TasksRepositoryImp @Inject constructor(
                 }
         }
     }
+
+    override suspend fun onCheckChange(taskId: String, check: Boolean): TaskResult {
+        return suspendCancellableCoroutine { continuation ->
+            firestore.collection("Tareas").document(taskId)
+                .update("check", check)
+                .addOnSuccessListener {
+                    continuation.resume(TaskResult.Success("Se actualizo"))
+                }
+                .addOnFailureListener { e ->
+                    continuation.resume(TaskResult.Error(e.message ?: "No se pudo actualizar la tarea"))
+                }
+        }
+    }
+
 
     private fun convertTasks(documents: MutableList<DocumentSnapshot>): List<TaskDom> {
         return documents.mapNotNull { document ->

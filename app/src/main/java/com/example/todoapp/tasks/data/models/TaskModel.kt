@@ -5,6 +5,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.PropertyName
 
 data class TaskModel(
+    @PropertyName("taskId") val taskId:String = "",
     @PropertyName("name") val name:String = "",
     @PropertyName("description") val description:String = "",
     @PropertyName("date") val date:String = "",
@@ -16,6 +17,7 @@ data class TaskModel(
 ){
     fun toTask():TaskDom{
         return TaskDom(
+            taskId = taskId,
             name = name,
             description = description,
             check = check,

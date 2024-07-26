@@ -22,4 +22,6 @@ interface TasksRepository {
 
     suspend fun getAllTasks(): TaskResult
 
+    suspend fun onCheckChange(taskId:String, check:Boolean):TaskResult
+
 }

@@ -162,6 +162,27 @@ class TaskScreenViewModel @Inject constructor(
         }
     }
 
+    fun onCheckedChange(taskId: String, check: Boolean) {
+        viewModelScope.launch {
+            try {
+                when (val response = repositoryImp.onCheckChange(taskId, check)) {
+                    is TaskResult.Error -> {
+                        _state.value = TaskScreenState.Error("Error: ${response.error}")
+
+                    }
+
+                    is TaskResult.Success -> {
+                        _state.value = TaskScreenState.Success(response.message)
+                        getAllTasks()
+                    }
+                }
+
+            } catch (e: Exception) {
+                _state.value = TaskScreenState.Error("Error: ${e.message}")
+            }
+        }
+    }
+
     fun resetState() {
         _state.value = TaskScreenState.Initial
         _showToast.value = false // Reset flag to hide Toast

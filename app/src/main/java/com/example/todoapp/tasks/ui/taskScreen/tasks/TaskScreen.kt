@@ -2,6 +2,7 @@
 
 package com.example.todoapp.tasks.ui.taskScreen.tasks
 
+import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -105,13 +105,16 @@ fun TaskScreen(
             content = {
                 BackgroundScreen(image = R.drawable.main_bg) {
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
                             .padding(horizontal = 8.dp),
                         contentPadding = it
                     ) {
                         if (fetchedTasks.value != null) {
                             items(fetchedTasks.value!!) { task ->
-                                TaskCheckBox(task = task)
+                                TaskCheckBox(task = task, context = context,onCheckedChange = { taskId, check ->
+                                    viewModel.onCheckedChange(taskId = taskId, check)
+                                })
                             }
                         }
                     }
@@ -413,7 +416,7 @@ fun DropDowsMenuCategories(
 }
 
 @Composable
-fun TaskCheckBox(task: TaskDom) {
+fun TaskCheckBox(task: TaskDom, context:Context,onCheckedChange: (String, Boolean) -> Unit) {
     Spacer(modifier = Modifier.size(8.dp))
     Row(
         modifier = Modifier
@@ -433,7 +436,10 @@ fun TaskCheckBox(task: TaskDom) {
         )
         Checkbox(
             checked = checkedState.value,
-            onCheckedChange = { checkedState.value = it },
+            onCheckedChange = {
+                checkedState.value = it
+                onCheckedChange(task.taskId, checkedState.value)
+            },
             modifier = Modifier
                 .weight(1f)
                 .clip(CircleShape)
