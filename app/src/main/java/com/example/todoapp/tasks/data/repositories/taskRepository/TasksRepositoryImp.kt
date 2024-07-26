@@ -3,6 +3,7 @@ package com.example.todoapp.tasks.data.repositories.taskRepository
 import com.example.todoapp.tasks.data.models.CategoryModel
 import com.example.todoapp.tasks.data.models.TaskModel
 import com.example.todoapp.tasks.domain.models.Category
+import com.example.todoapp.tasks.domain.models.TaskDom
 import com.example.todoapp.tasks.domain.repositories.TasksRepository
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -96,4 +97,33 @@ class TasksRepositoryImp @Inject constructor(
             document.toObject(CategoryModel::class.java)?.toCategory()
         }
     }
+
+    override suspend fun getAllTasks(): TaskResult {
+        return suspendCancellableCoroutine { continuation ->
+            firestore.collection("Tareas").get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.isEmpty) {
+                        continuation.resume(TaskResult.Error(""))
+
+                    } else {
+                        continuation.resume(
+                            TaskResult.Success(
+                                "",
+                                tasks = convertTasks(querySnapshot.documents)
+                            )
+                        )
+                    }
+                }.addOnFailureListener {
+                    println("Error: ${it.message}")
+                    continuation.resume(TaskResult.Error(it.message ?: ""))
+                }
+        }
+    }
+
+    private fun convertTasks(documents: MutableList<DocumentSnapshot>): List<TaskDom> {
+        return documents.mapNotNull { document ->
+            document.toObject(TaskModel::class.java)?.toTask()
+        }
+    }
+
 }

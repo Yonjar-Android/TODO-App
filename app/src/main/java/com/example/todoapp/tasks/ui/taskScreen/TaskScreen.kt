@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -39,7 +41,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -53,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.todoapp.R
 import com.example.todoapp.tasks.domain.models.Category
+import com.example.todoapp.tasks.domain.models.TaskDom
 import com.example.todoapp.tasks.ui.BackgroundScreen
 import com.example.todoapp.tasks.ui.DateUtilsClass
 import com.example.todoapp.tasks.ui.Loading
@@ -72,10 +74,12 @@ fun TaskScreen(
 
     // State to hold fetched categories
     val fetchedCategories = rememberSaveable { mutableStateOf<List<Category>?>(null) }
+    val fetchedTasks = rememberSaveable { mutableStateOf<List<TaskDom>?>(null) }
 
-    // Fetch categories once when the screen is composed
-    LaunchedEffect(Unit) {
-        viewModel.getCategories()
+    // Update fetchedCategories when viewModel state changes
+    LaunchedEffect(state.value) {
+        fetchedCategories.value = viewModel.categories
+        fetchedTasks.value = viewModel.tasks
     }
 
     val showToast = viewModel.showToast.collectAsState()
@@ -93,7 +97,13 @@ fun TaskScreen(
         Scaffold(
             content = {
                 BackgroundScreen(image = R.drawable.main_bg) {
-                    Box(modifier = Modifier.padding(it.calculateTopPadding()))
+                    LazyColumn(modifier = Modifier.padding(it.calculateTopPadding())) {
+                        if (fetchedTasks.value != null){
+                            items(fetchedTasks.value!!){ task ->
+                                Text(text = task.name)
+                            }
+                        }
+                    }
                 }
             },
 
@@ -122,10 +132,6 @@ fun TaskScreen(
                 categories = fetchedCategories.value
             )
         }
-        // Update fetchedCategories when viewModel state changes
-        LaunchedEffect(state.value) {
-            fetchedCategories.value = viewModel.categories
-        }
 
         when (val currentState = state.value) {
             is TaskScreenState.Error -> {
@@ -134,6 +140,7 @@ fun TaskScreen(
             }
 
             TaskScreenState.Initial -> {}
+
             TaskScreenState.Loading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -148,12 +155,12 @@ fun TaskScreen(
                 if (showToast.value) {
                     if (currentState.message.isNotBlank()) {
                         Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
+                        viewModel.getAllTasks()
                     }
                 }
                 viewModel.resetState()
             }
         }
-
     }
 }
 
@@ -219,7 +226,6 @@ fun DialogTaskAdd(
                     close()
                 }
         )
-
 
         Column(
             modifier = Modifier

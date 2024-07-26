@@ -8,6 +8,7 @@ import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
 import com.example.todoapp.tasks.domain.models.Category
+import com.example.todoapp.tasks.domain.models.TaskDom
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,6 +31,12 @@ class TaskScreenViewModel @Inject constructor(
     val resetFields: StateFlow<Boolean> = _resetFields
 
     var categories: List<Category>? = listOf()
+    var tasks: List<TaskDom>? = listOf()
+
+    init {
+        getCategories()
+        getAllTasks()
+    }
 
     fun getCategories() {
         viewModelScope.launch {
@@ -41,7 +48,7 @@ class TaskScreenViewModel @Inject constructor(
 
                     is CategoryResult.Success -> {
                         categories = response.categories
-                        _state.value = TaskScreenState.Success("", response.categories)
+                        _state.value = TaskScreenState.Success("")
                     }
                 }
             } catch (e: Exception) {
@@ -93,7 +100,7 @@ class TaskScreenViewModel @Inject constructor(
                             }
 
                             is TaskResult.Success -> {
-                                _state.value = TaskScreenState.Success(response.message, categories)
+                                _state.value = TaskScreenState.Success(response.message)
                                 _resetFields.value = true
                             }
                         }
@@ -106,25 +113,26 @@ class TaskScreenViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun validations(name: String, date: String, category: String):Boolean{
+    private fun validations(name: String, date: String, category: String): Boolean {
         _showToast.value = true
-        if (name.isBlank()){
+        if (name.isBlank()) {
             _state.value = TaskScreenState.Error("Rellene el campo nombre")
             return false
         }
-        if (category.isBlank()){
+        if (category.isBlank()) {
             _state.value = TaskScreenState.Error("Seleccione una categoría")
             return false
         }
-        if (date.isBlank()){
+        if (date.isBlank()) {
             _state.value = TaskScreenState.Error("Seleccione una fecha")
             return false
         }
 
         // Date Validation
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy") // Match your date formatval taskDate = LocalDate.parse(date, formatter)
+        val formatter =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy") // Match your date formatval taskDate = LocalDate.parse(date, formatter)
         val today = LocalDate.now()
-        val dateSelected = LocalDate.parse(date,formatter)
+        val dateSelected = LocalDate.parse(date, formatter)
 
         if (dateSelected.isBefore(today)) {
             _state.value = TaskScreenState.Error("No puede seleccionar una fecha anterior a hoy")
@@ -132,6 +140,26 @@ class TaskScreenViewModel @Inject constructor(
         }
 
         return true
+    }
+
+    fun getAllTasks() {
+        viewModelScope.launch {
+            try {
+                when (val response = repositoryImp.getAllTasks()) {
+                    is TaskResult.Error -> {
+                        _state.value = TaskScreenState.Error("Error: ${response.error}")
+                    }
+
+                    is TaskResult.Success -> {
+                        _state.value = TaskScreenState.Success(response.message)
+                        tasks = response.tasks
+                    }
+                }
+
+            } catch (e: Exception) {
+                _state.value = TaskScreenState.Error("Error: ${e.message}")
+            }
+        }
     }
 
     fun resetState() {

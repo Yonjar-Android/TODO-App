@@ -19,4 +19,7 @@ interface TasksRepository {
         users:List<String> = listOf(),
         category:DocumentReference
     ): TaskResult
+
+    suspend fun getAllTasks(): TaskResult
+
 }
