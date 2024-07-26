@@ -5,6 +5,7 @@ import com.example.todoapp.TestCoroutineRule
 import com.example.todoapp.motherObject.TaskMotherObject
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
+import com.example.todoapp.tasks.domain.models.TaskDom
 import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenState
 import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenViewModel
 import com.google.firebase.firestore.DocumentReference
@@ -263,4 +264,77 @@ class TaskScreenViewModelTest{
         }
     }
 
+    @Test
+    fun `getAllTasks should emit Success state if TaskResult_Success is returned`() = runTest {
+         val tasksList = listOf(
+            TaskDom(
+                taskId = "123456789",
+                name = "Crear base de datos",
+                description = "",
+                deliverablesDesc = "",
+                deliverables = listOf(),
+                users = listOf(),
+                check = false,
+                category = categoryMock,
+                date = date
+            )
+        )
+
+        val taskResult = TaskResult.Success(tasks = tasksList, message = "")
+
+        //Given
+        Mockito.`when`(repositoryImp.getAllTasks()).thenReturn(taskResult)
+
+        //When
+        viewModel.getAllTasks()
+
+        //Then
+        viewModel.state.test {
+            assertTrue(awaitItem() is TaskScreenState.Initial)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskScreenState.Success)
+            val successState = state as TaskScreenState.Success
+            assertEquals(successState.message, taskResult.message)
+        }
+    }
+
+    @Test
+    fun `getAllTasks should emit Error state if TaskResult_Error is returned`() = runTest {
+        //Given
+        Mockito.`when`(repositoryImp.getAllTasks()).thenReturn(TaskMotherObject.TaskResultError)
+
+        //When
+        viewModel.getAllTasks()
+
+        //Then
+        viewModel.state.test {
+            assertTrue(awaitItem() is TaskScreenState.Initial)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskScreenState.Error)
+            val errorState = state as TaskScreenState.Error
+            assertEquals(errorState.error, "Error: $error")
+        }
+    }
+
+
+    @Test
+    fun `getAllTasks should emit Error state if an exception occurs`() = runTest {
+        //Given
+        Mockito.`when`(repositoryImp.getAllTasks()).thenThrow(RuntimeException(error))
+
+        //When
+        viewModel.getAllTasks()
+
+        //Then
+        viewModel.state.test {
+            assertTrue(awaitItem() is TaskScreenState.Initial)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskScreenState.Error)
+            val errorState = state as TaskScreenState.Error
+            assertEquals(errorState.error, "Error: $error")
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.example.todoapp.motherObject
 import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.domain.models.Category
+import com.example.todoapp.tasks.domain.models.TaskDom
 
 object TaskMotherObject {
 
@@ -19,6 +20,8 @@ object TaskMotherObject {
             "Images"
         )
     )
+
+
 
     val categoryResult = CategoryResult.Success(
         categories = categoryList
