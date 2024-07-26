@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Assertions.*
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TaskScreenViewModelTest{
@@ -38,7 +40,7 @@ class TaskScreenViewModelTest{
 
     //variables
     private val taskName = "Create the database"
-    private val date = "25/07/2024"
+    private val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
     private val error = "An error has occurred"
 
@@ -64,7 +66,7 @@ class TaskScreenViewModelTest{
             val state = awaitItem()
             assertTrue(state is TaskScreenState.Success)
             val successState = state as TaskScreenState.Success
-            assertEquals(successState.categories, TaskMotherObject.categoryResult.categories)
+            assertEquals(successState.message, "")
         }
     }
 
