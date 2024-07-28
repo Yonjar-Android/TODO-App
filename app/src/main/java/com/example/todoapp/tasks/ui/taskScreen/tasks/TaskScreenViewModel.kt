@@ -168,13 +168,8 @@ class TaskScreenViewModel @Inject constructor(
                 when (val response = repositoryImp.onCheckChange(taskId, check)) {
                     is TaskResult.Error -> {
                         _state.value = TaskScreenState.Error("Error: ${response.error}")
-
                     }
-
-                    is TaskResult.Success -> {
-                        _state.value = TaskScreenState.Success(response.message)
-                        getAllTasks()
-                    }
+                    is TaskResult.Success -> {}
                 }
 
             } catch (e: Exception) {

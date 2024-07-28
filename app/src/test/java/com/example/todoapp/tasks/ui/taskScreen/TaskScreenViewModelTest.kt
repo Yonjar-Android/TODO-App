@@ -23,7 +23,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TaskScreenViewModelTest{
+class TaskScreenViewModelTest {
     @get:Rule
     val testCoroutine = TestCoroutineRule()
 
@@ -32,11 +32,10 @@ class TaskScreenViewModelTest{
 
     private lateinit var viewModel: TaskScreenViewModel
 
-    private val category:String = "documents"
+    private val category: String = "documents"
 
     @Mock
-    lateinit var categoryMock:DocumentReference
-
+    lateinit var categoryMock: DocumentReference
 
 
     //variables
@@ -47,34 +46,37 @@ class TaskScreenViewModelTest{
 
 
     @Before
-    fun setUp(){
+    fun setUp() {
         MockitoAnnotations.openMocks(this)
         viewModel = TaskScreenViewModel(repositoryImp)
     }
 
     @Test
-    fun `getCategories should emit a Success state is a CategoryResult_Success is received`() = runTest {
-        //Given
-        Mockito.`when`(repositoryImp.getAllCategories()).thenReturn(TaskMotherObject.categoryResult)
+    fun `getCategories should emit a Success state is a CategoryResult_Success is received`() =
+        runTest {
+            //Given
+            Mockito.`when`(repositoryImp.getAllCategories())
+                .thenReturn(TaskMotherObject.categoryResult)
 
-        //When
-        viewModel.getCategories()
+            //When
+            viewModel.getCategories()
 
-        //Then
-        viewModel.state.test {
-            assertTrue(awaitItem() is TaskScreenState.Initial)
-            advanceUntilIdle()
-            val state = awaitItem()
-            assertTrue(state is TaskScreenState.Success)
-            val successState = state as TaskScreenState.Success
-            assertEquals(successState.message, "")
+            //Then
+            viewModel.state.test {
+                assertTrue(awaitItem() is TaskScreenState.Initial)
+                advanceUntilIdle()
+                val state = awaitItem()
+                assertTrue(state is TaskScreenState.Success)
+                val successState = state as TaskScreenState.Success
+                assertEquals(successState.message, "")
+            }
         }
-    }
 
     @Test
     fun `getCategories should emit Error state if a CategoryResult_Error is received`() = runTest {
         //Given
-        Mockito.`when`(repositoryImp.getAllCategories()).thenReturn(TaskMotherObject.categoryResultError)
+        Mockito.`when`(repositoryImp.getAllCategories())
+            .thenReturn(TaskMotherObject.categoryResultError)
 
         //When
         viewModel.getCategories()
@@ -110,58 +112,65 @@ class TaskScreenViewModelTest{
     }
 
     @Test
-    fun `createTask should emit Success state on successful task creation if TaskResult_Success is returned`() = runTest {
-         val taskResultSuccess = TaskResult.Success("", categoryMock)
+    fun `createTask should emit Success state on successful task creation if TaskResult_Success is returned`() =
+        runTest {
+            val taskResultSuccess = TaskResult.Success("", categoryMock)
 
-        //Given
-        Mockito.`when`(repositoryImp.getCategoryReference(category)).thenReturn(taskResultSuccess)
+            //Given
+            Mockito.`when`(repositoryImp.getCategoryReference(category))
+                .thenReturn(taskResultSuccess)
 
-        Mockito.`when`(repositoryImp.createTask(
-            name = taskName,
-            description = "",
-            deliverables = listOf(),
-            deliverablesDescription = "",
-            users = listOf(),
-            category = categoryMock,
-            date = date
-        )).thenReturn(TaskMotherObject.TaskResultSuccess)
+            Mockito.`when`(
+                repositoryImp.createTask(
+                    name = taskName,
+                    description = "",
+                    deliverables = listOf(),
+                    deliverablesDescription = "",
+                    users = listOf(),
+                    category = categoryMock,
+                    date = date
+                )
+            ).thenReturn(TaskMotherObject.TaskResultSuccess)
 
-        //When
-        viewModel.createTask(
-            name = taskName,
-            description = "",
-            deliverables = listOf(),
-            deliverablesDescription = "",
-            users = listOf(),
-            category = category,
-            date = date
-        )
+            //When
+            viewModel.createTask(
+                name = taskName,
+                description = "",
+                deliverables = listOf(),
+                deliverablesDescription = "",
+                users = listOf(),
+                category = category,
+                date = date
+            )
 
-        //Then
-        viewModel.state.test {
-            assertTrue(awaitItem() is TaskScreenState.Loading)
-            advanceUntilIdle()
-            val state = awaitItem()
-            assertTrue(state is TaskScreenState.Success)
-            val successState = state as TaskScreenState.Success
-            assertEquals(successState.message, TaskMotherObject.TaskResultSuccess.message)
+            //Then
+            viewModel.state.test {
+                assertTrue(awaitItem() is TaskScreenState.Loading)
+                advanceUntilIdle()
+                val state = awaitItem()
+                assertTrue(state is TaskScreenState.Success)
+                val successState = state as TaskScreenState.Success
+                assertEquals(successState.message, TaskMotherObject.TaskResultSuccess.message)
+            }
         }
-    }
 
     @Test
     fun `createTask should emit Error state if CategoryResult_Error is returned`() = runTest {
         //Given
-        Mockito.`when`(repositoryImp.getCategoryReference(category)).thenReturn(TaskMotherObject.TaskResultError)
+        Mockito.`when`(repositoryImp.getCategoryReference(category))
+            .thenReturn(TaskMotherObject.TaskResultError)
 
-        Mockito.`when`(repositoryImp.createTask(
-            name = taskName,
-            description = "",
-            deliverables = listOf(),
-            deliverablesDescription = "",
-            users = listOf(),
-            category = categoryMock,
-            date = date
-        )).thenReturn(TaskMotherObject.TaskResultSuccess)
+        Mockito.`when`(
+            repositoryImp.createTask(
+                name = taskName,
+                description = "",
+                deliverables = listOf(),
+                deliverablesDescription = "",
+                users = listOf(),
+                category = categoryMock,
+                date = date
+            )
+        ).thenReturn(TaskMotherObject.TaskResultSuccess)
 
         //When
         viewModel.createTask(
@@ -187,21 +196,23 @@ class TaskScreenViewModelTest{
     }
 
     @Test
-    fun `createTask should emit Error state if a TaskResult_Error is returned`() = runTest{
-         val taskResultSuccess = TaskResult.Success("", categoryMock)
+    fun `createTask should emit Error state if a TaskResult_Error is returned`() = runTest {
+        val taskResultSuccess = TaskResult.Success("", categoryMock)
 
         //Given
         Mockito.`when`(repositoryImp.getCategoryReference(category)).thenReturn(taskResultSuccess)
 
-        Mockito.`when`(repositoryImp.createTask(
-            name = taskName,
-            description = "",
-            deliverables = listOf(),
-            deliverablesDescription = "",
-            users = listOf(),
-            category = categoryMock,
-            date = date
-        )).thenReturn(TaskMotherObject.TaskResultError)
+        Mockito.`when`(
+            repositoryImp.createTask(
+                name = taskName,
+                description = "",
+                deliverables = listOf(),
+                deliverablesDescription = "",
+                users = listOf(),
+                category = categoryMock,
+                date = date
+            )
+        ).thenReturn(TaskMotherObject.TaskResultError)
 
         //When
         viewModel.createTask(
@@ -232,15 +243,17 @@ class TaskScreenViewModelTest{
         //Given
         Mockito.`when`(repositoryImp.getCategoryReference(category)).thenReturn(taskResultSuccess)
 
-        Mockito.`when`(repositoryImp.createTask(
-            name = taskName,
-            description = "",
-            deliverables = listOf(),
-            deliverablesDescription = "",
-            users = listOf(),
-            category = categoryMock,
-            date = date
-        )).thenThrow(RuntimeException(error))
+        Mockito.`when`(
+            repositoryImp.createTask(
+                name = taskName,
+                description = "",
+                deliverables = listOf(),
+                deliverablesDescription = "",
+                users = listOf(),
+                category = categoryMock,
+                date = date
+            )
+        ).thenThrow(RuntimeException(error))
 
         //When
         viewModel.createTask(
@@ -266,7 +279,7 @@ class TaskScreenViewModelTest{
 
     @Test
     fun `getAllTasks should emit Success state if TaskResult_Success is returned`() = runTest {
-         val tasksList = listOf(
+        val tasksList = listOf(
             TaskDom(
                 taskId = "123456789",
                 name = "Crear base de datos",
@@ -326,6 +339,46 @@ class TaskScreenViewModelTest{
 
         //When
         viewModel.getAllTasks()
+
+        //Then
+        viewModel.state.test {
+            assertTrue(awaitItem() is TaskScreenState.Initial)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskScreenState.Error)
+            val errorState = state as TaskScreenState.Error
+            assertEquals(errorState.error, "Error: $error")
+        }
+    }
+
+    @Test
+    fun `onCheckedChange should emit Error state if TaskResult_Error is returned`() = runTest {
+        //Given
+        Mockito.`when`(repositoryImp.onCheckChange("a1b2c3d4", true))
+            .thenReturn(TaskMotherObject.TaskResultError)
+
+        //When
+        viewModel.onCheckedChange("a1b2c3d4", true)
+
+        //Then
+        viewModel.state.test {
+            assertTrue(awaitItem() is TaskScreenState.Initial)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskScreenState.Error)
+            val errorState = state as TaskScreenState.Error
+            assertEquals(errorState.error, "Error: $error")
+        }
+    }
+
+    @Test
+    fun `onCheckedChange should emit Error state if an exception occurs`() = runTest {
+        //Given
+        Mockito.`when`(repositoryImp.onCheckChange("a1b2c3d4", true))
+            .thenThrow(RuntimeException(error))
+
+        //When
+        viewModel.onCheckedChange("a1b2c3d4", true)
 
         //Then
         viewModel.state.test {
