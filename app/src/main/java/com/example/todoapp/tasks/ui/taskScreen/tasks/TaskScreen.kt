@@ -2,7 +2,6 @@
 
 package com.example.todoapp.tasks.ui.taskScreen.tasks
 
-import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -59,6 +58,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.example.todoapp.R
 import com.example.todoapp.tasks.domain.models.Category
 import com.example.todoapp.tasks.domain.models.TaskDom
@@ -73,7 +73,8 @@ import com.example.todoapp.tasks.ui.errorFun
 @Composable
 fun TaskScreen(
     email: String,
-    viewModel: TaskScreenViewModel
+    viewModel: TaskScreenViewModel,
+    navHostController: NavHostController
 ) {
 
     val state = viewModel.state.collectAsState()
@@ -112,9 +113,12 @@ fun TaskScreen(
                     ) {
                         if (fetchedTasks.value != null) {
                             items(fetchedTasks.value!!) { task ->
-                                TaskCheckBox(task = task, context = context,onCheckedChange = { taskId, check ->
+                                TaskCheckBox(task = task, onCheckedChange = { taskId, check ->
                                     viewModel.onCheckedChange(taskId = taskId, check)
-                                })
+                                },
+                                    goToDetail = { taskId ->
+                                        navHostController.navigate("taskDetailScreen/$taskId")
+                                    })
                             }
                         }
                     }
@@ -166,11 +170,9 @@ fun TaskScreen(
             }
 
             is TaskScreenState.Success -> {
-                if (showToast.value) {
-                    if (currentState.message.isNotBlank()) {
+                if (showToast.value && currentState.message.isNotBlank()) {
                         Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
                         viewModel.getAllTasks()
-                    }
                 }
                 viewModel.resetState()
             }
@@ -204,7 +206,7 @@ fun DialogTaskAdd(
             mutableStateOf("")
         }
 
-        var dateState = rememberDatePickerState()
+        val dateState = rememberDatePickerState()
 
         var category by rememberSaveable {
             mutableStateOf("")
@@ -416,14 +418,17 @@ fun DropDowsMenuCategories(
 }
 
 @Composable
-fun TaskCheckBox(task: TaskDom, context:Context,onCheckedChange: (String, Boolean) -> Unit) {
+fun TaskCheckBox(task: TaskDom,onCheckedChange: (String, Boolean) -> Unit, goToDetail:(String) -> Unit) {
     Spacer(modifier = Modifier.size(8.dp))
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
-            .padding(4.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(4.dp)
+            .clickable {
+                goToDetail(task.taskId)
+            }
     ) {
         val checkedState = rememberSaveable { mutableStateOf(task.check) }
 

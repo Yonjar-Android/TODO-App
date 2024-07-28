@@ -21,6 +21,8 @@ import com.example.todoapp.tasks.ui.auth.register.RegisterViewModel
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordScreen
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordViewModel
 import com.example.todoapp.tasks.ui.taskScreen.MainTaskScreen
+import com.example.todoapp.tasks.ui.taskScreen.taskDetail.TaskDetail
+import com.example.todoapp.tasks.ui.taskScreen.taskDetail.TaskDetailViewModel
 import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenViewModel
 import com.example.todoapp.ui.theme.TodoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,6 +37,8 @@ class MainActivity : ComponentActivity() {
     private val resetPasswordViewModel: ResetPasswordViewModel by viewModels()
 
     private val taskScreenViewModel: TaskScreenViewModel by viewModels()
+
+    private val taskDetailViewModel: TaskDetailViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +98,23 @@ class MainActivity : ComponentActivity() {
                                 taskScreenViewModel = taskScreenViewModel
                             )
                         }
+                    }
+
+                    composable(
+                        route = "taskDetailScreen/{taskId}", arguments = listOf(
+                            navArgument("taskId") {
+                                type = NavType.StringType
+                            })
+                    ) { backStackEntry ->
+
+                        val taskId = backStackEntry.arguments?.getString("taskId")
+
+                        TaskDetail(
+                            taskId = taskId!!,
+                            navHostController = navController,
+                            taskDetailViewModel = taskDetailViewModel
+                        )
+
                     }
                 }
             }

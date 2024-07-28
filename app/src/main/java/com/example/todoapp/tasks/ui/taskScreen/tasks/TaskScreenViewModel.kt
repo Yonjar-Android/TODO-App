@@ -169,7 +169,9 @@ class TaskScreenViewModel @Inject constructor(
                     is TaskResult.Error -> {
                         _state.value = TaskScreenState.Error("Error: ${response.error}")
                     }
-                    is TaskResult.Success -> {}
+                    is TaskResult.Success -> {
+                        getAllTasks()
+                    }
                 }
 
             } catch (e: Exception) {

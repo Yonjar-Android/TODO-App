@@ -10,6 +10,7 @@ import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -45,7 +46,7 @@ fun MainTaskScreen(
                 startDestination = "taskScreen"
             ) {
                 composable(route = "taskScreen") {
-                    TaskScreen(email,taskScreenViewModel)
+                    TaskScreen(email,taskScreenViewModel, navHostController)
                 }
 
                 composable(route = "userScreen") {
