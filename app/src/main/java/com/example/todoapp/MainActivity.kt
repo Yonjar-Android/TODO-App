@@ -1,5 +1,7 @@
 package com.example.todoapp
 
+import android.app.Activity
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,19 +9,21 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.todoapp.tasks.ui.BackgroundScreen
-import com.example.todoapp.tasks.ui.home.LogoAndButtons
 import com.example.todoapp.tasks.ui.auth.login.LoginScreen
 import com.example.todoapp.tasks.ui.auth.login.LoginViewModel
 import com.example.todoapp.tasks.ui.auth.register.RegisterScreen
 import com.example.todoapp.tasks.ui.auth.register.RegisterViewModel
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordScreen
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordViewModel
+import com.example.todoapp.tasks.ui.home.LogoAndButtons
 import com.example.todoapp.tasks.ui.taskScreen.MainTaskScreen
 import com.example.todoapp.tasks.ui.taskScreen.taskDetail.TaskDetail
 import com.example.todoapp.tasks.ui.taskScreen.taskDetail.TaskDetailViewModel
@@ -45,6 +49,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            SetOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+
             TodoAppTheme {
 
                 val navController = rememberNavController()
@@ -120,5 +126,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+
+@Composable
+fun SetOrientation(orientation: Int) {
+    val context = LocalContext.current
+    (context as? Activity)?.requestedOrientation = orientation
 }
 
