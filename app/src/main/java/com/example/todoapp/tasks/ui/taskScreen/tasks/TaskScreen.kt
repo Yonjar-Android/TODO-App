@@ -196,7 +196,7 @@ fun DialogTaskAdd(
             .background(Color(0xFF494848))
             .padding(bottom = 25.dp)
     ) {
-        val (close, form) = createRefs()
+        val (closed, form) = createRefs()
 
         val guidelineTop = createGuidelineFromTop(0.05f)
 
@@ -234,7 +234,7 @@ fun DialogTaskAdd(
             tint = Color.White,
             modifier = Modifier
                 .size(35.dp)
-                .constrainAs(close) {
+                .constrainAs(closed) {
                     top.linkTo(parent.top)
                     end.linkTo(parent.end)
                 }
