@@ -21,6 +21,18 @@ interface TasksRepository {
         category:DocumentReference
     ): TaskResult
 
+    suspend fun updateTask(
+        taskId: String,
+        name: String,
+        description: String?,
+        date: String,
+        check: Boolean = false,
+        deliverablesDescription:String?,
+        deliverables:List<String> = listOf(),
+        users:List<String> = listOf(),
+        category:DocumentReference
+    ): TaskResult
+
     suspend fun getAllTasks(): TaskResult
 
     suspend fun getTaskById(taskId:String): TaskDetailResult

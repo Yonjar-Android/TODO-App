@@ -96,6 +96,44 @@ class TasksRepositoryImp @Inject constructor(
 
     }
 
+    override suspend fun updateTask(
+        taskId: String,
+        name: String,
+        description: String?,
+        date: String,
+        check: Boolean,
+        deliverablesDescription: String?,
+        deliverables: List<String>,
+        users: List<String>,
+        category: DocumentReference
+    ): TaskResult {
+        return suspendCancellableCoroutine { continuation ->
+
+            // Referencia al documento de la tarea en la colección "Tareas"
+            val taskDocumentRef = firestore.collection("Tareas").document(taskId)
+
+            val updates = hashMapOf<String, Any?>(
+                "name" to name,
+                "description" to description,
+                "date" to date,
+                "check" to check,
+                "deliverablesDescription" to deliverablesDescription,
+                "deliverables" to deliverables,
+                "users" to users,
+                "category" to category
+            )
+
+            taskDocumentRef.update(updates)
+                .addOnSuccessListener {
+                    continuation.resume(TaskResult.Success("Tarea actualizada exitosamente"))
+                }
+                .addOnFailureListener { e ->
+                    continuation.resume(TaskResult.Error(e.message ?: "Error actualizando tarea"))
+                }
+
+        }
+    }
+
     private fun convertCategories(documents: MutableList<DocumentSnapshot>): List<Category> {
         return documents.mapNotNull { document ->
             document.toObject(CategoryModel::class.java)?.toCategory()

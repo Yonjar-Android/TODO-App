@@ -91,7 +91,7 @@ fun TaskDetail(
                         TaskDetailState.Initial -> {}
                         TaskDetailState.Loading -> {
                             Box(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier.fillMaxSize().background(Color.White),
                                 contentAlignment = Alignment.Center
                             ){
                                 Loading()
@@ -111,7 +111,7 @@ fun TaskDetail(
 
                     if (showDialog && taskState.value != null
                         && taskDetailViewModel.category.isNotBlank()
-                    ) {
+                    ){
                         DialogTaskAdd(
                             viewModel = taskDetailViewModel,
                             closeDate = { showDate = !showDate },
@@ -264,7 +264,16 @@ fun DialogTaskAdd(
                 color = ButtonDefaults.buttonColors(containerColor = Color(0xFF6E56FD))
             )
             {
-
+                viewModel.updateTask(
+                    taskId = task.taskId,
+                    name = name,
+                    date = dateToString,
+                    description = description,
+                    deliverables = listOf(),
+                    deliverablesDescription = entregables,
+                    check = task.check,
+                    category = categoryV
+                )
             }
         }
     }

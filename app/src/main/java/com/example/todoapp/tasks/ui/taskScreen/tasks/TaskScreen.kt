@@ -161,7 +161,7 @@ fun TaskScreen(
 
             TaskScreenState.Loading -> {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
                     Loading()
