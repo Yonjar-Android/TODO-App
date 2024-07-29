@@ -37,6 +37,7 @@ class AuthRepositoryImp @Inject constructor(
                 }
             }
         }.getOrElse {
+            println(it.message)
             CreateUserResult.Error("Error al iniciar sesión: ${it.message}")
         }
     }
