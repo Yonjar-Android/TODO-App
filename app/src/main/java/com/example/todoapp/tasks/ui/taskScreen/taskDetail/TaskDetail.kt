@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -61,15 +62,18 @@ fun TaskDetail(
 
     val context = LocalContext.current
     val state = taskDetailViewModel.state.collectAsState()
+
     var showDialog by rememberSaveable { mutableStateOf(false) }
-    var task by rememberSaveable { mutableStateOf<TaskDom?>(null) }
+    var showDate by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(state.value) {
-        if (state.value is TaskDetailState.Success) {
-            task = (state.value as TaskDetailState.Success).task
-        }
+    val taskState = taskDetailViewModel.task.collectAsState()
+
+    val fetchedCategories = taskDetailViewModel.categories.collectAsState()
+
+
+    LaunchedEffect(Unit) {
+        taskDetailViewModel.getTaskById(taskId)
     }
-
 
     Scaffold(
         content = {
@@ -77,9 +81,7 @@ fun TaskDetail(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(it),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .padding(it)
                 ) {
                     when (val currentState = state.value) {
                         is TaskDetailState.Error -> {
@@ -88,7 +90,12 @@ fun TaskDetail(
 
                         TaskDetailState.Initial -> {}
                         TaskDetailState.Loading -> {
-                            Loading()
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ){
+                                Loading()
+                            }
                         }
 
                         is TaskDetailState.Success -> {
@@ -101,21 +108,27 @@ fun TaskDetail(
                             showDialog = true
                         }
                     }
+
+                    if (showDialog && taskState.value != null
+                        && taskDetailViewModel.category.isNotBlank()
+                    ) {
+                        DialogTaskAdd(
+                            viewModel = taskDetailViewModel,
+                            closeDate = { showDate = !showDate },
+                            showDate = showDate, // O el estado que necesites para mostrar el date picker
+                            categories = fetchedCategories.value, // Pasa las categorías necesarias
+                            task = taskState.value!!,
+                            category = taskDetailViewModel.category
+                        )
+                    }
+
                 }
             }
         },
         topBar = { MyTopAppBar(navHostController) }
     )
 
-    if (showDialog && task != null) {
-        DialogTaskAdd(
-            viewModel = taskDetailViewModel,
-            closeDate = { showDialog = false },
-            showDate = false, // O el estado que necesites para mostrar el date picker
-            categories = listOf(), // Pasa las categorías necesarias
-            task = task!!
-        )
-    }
+
 }
 
 @Composable
@@ -140,7 +153,8 @@ fun DialogTaskAdd(
     closeDate: () -> Unit,
     showDate: Boolean,
     categories: List<Category>?,
-    task: TaskDom
+    task: TaskDom,
+    category: String
 ) {
 
     ConstraintLayout(
@@ -149,7 +163,7 @@ fun DialogTaskAdd(
             .background(Color(0xFF494848))
             .padding(bottom = 25.dp)
     ) {
-        val (close, form) = createRefs()
+        val (form) = createRefs()
 
         val guidelineTop = createGuidelineFromTop(0.05f)
 
@@ -159,8 +173,8 @@ fun DialogTaskAdd(
 
         val dateState = rememberDatePickerState()
 
-        var category by rememberSaveable {
-            mutableStateOf("")
+        var categoryV by rememberSaveable {
+            mutableStateOf(category)
         }
 
         var description by rememberSaveable {
@@ -193,7 +207,7 @@ fun DialogTaskAdd(
                 text = description ?: ""
             ) { description = it }
 
-            DropDowsMenuCategories(categories, categorySelected = category) { category = it }
+            DropDowsMenuCategories(categories, categorySelected = categoryV) { categoryV = it }
 
 
             // Components to manage the date selected
@@ -204,7 +218,7 @@ fun DialogTaskAdd(
             }
             val dateToString = millisToLocalDate?.let {
                 DateUtilsClass().dateToString(millisToLocalDate)
-            } ?: ""
+            } ?: task.date
 
             DateFieldComp(dateToString)
 

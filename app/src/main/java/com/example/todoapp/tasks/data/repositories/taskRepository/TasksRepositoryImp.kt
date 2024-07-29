@@ -5,9 +5,11 @@ import com.example.todoapp.tasks.data.models.TaskModel
 import com.example.todoapp.tasks.domain.models.Category
 import com.example.todoapp.tasks.domain.models.TaskDom
 import com.example.todoapp.tasks.domain.repositories.TasksRepository
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -118,6 +120,39 @@ class TasksRepositoryImp @Inject constructor(
                 }.addOnFailureListener {
                     println("Error: ${it.message}")
                     continuation.resume(TaskResult.Error(it.message ?: ""))
+                }
+        }
+    }
+
+    override suspend fun getTaskById(taskId: String): TaskDetailResult {
+        return suspendCancellableCoroutine { continuation ->
+
+            firestore.collection("Tareas")
+                .whereEqualTo("taskId", taskId).get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.isEmpty) {
+                        continuation.resume(TaskDetailResult.Error("Tarea no encontrada"))
+                    } else {
+                        val taskModel = querySnapshot.documents[0].toObject(TaskModel::class.java)
+                        if (taskModel != null) {
+                            val categoryReference = taskModel.category
+                            categoryReference?.get()
+                                ?.addOnSuccessListener { categoryDocument ->
+                                    if (categoryDocument.exists()) {
+                                        val categoryName = categoryDocument.getString("name")
+                                        continuation.resume(TaskDetailResult.Success(taskModel.toTask(), categoryName ?: "Categoría desconocida"))
+                                    } else {
+                                        continuation.resume(TaskDetailResult.Error("Categoría no encontrada"))
+                                    }
+                                }?.addOnFailureListener {
+                                    continuation.resume(TaskDetailResult.Error(it.message ?: "Error obteniendo categoría"))
+                                }
+                        } else {
+                            continuation.resume(TaskDetailResult.Error("Error convirtiendo tarea"))
+                        }
+                    }
+                }.addOnFailureListener {
+                    continuation.resume(TaskDetailResult.Error(it.message ?: "Error obteniendo tarea"))
                 }
         }
     }

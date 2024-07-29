@@ -1,6 +1,7 @@
 package com.example.todoapp.tasks.domain.repositories
 
 import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
+import com.example.todoapp.tasks.data.repositories.taskRepository.TaskDetailResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.google.firebase.firestore.DocumentReference
 
@@ -21,6 +22,8 @@ interface TasksRepository {
     ): TaskResult
 
     suspend fun getAllTasks(): TaskResult
+
+    suspend fun getTaskById(taskId:String): TaskDetailResult
 
     suspend fun onCheckChange(taskId:String, check:Boolean):TaskResult
 
