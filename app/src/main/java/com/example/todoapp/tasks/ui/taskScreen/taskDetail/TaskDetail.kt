@@ -86,6 +86,7 @@ fun TaskDetail(
                     when (val currentState = state.value) {
                         is TaskDetailState.Error -> {
                             errorFun(currentState.error, context)
+                            taskDetailViewModel.resetState()
                         }
 
                         TaskDetailState.Initial -> {}
@@ -99,13 +100,11 @@ fun TaskDetail(
                         }
 
                         is TaskDetailState.Success -> {
-
                             if (currentState.message.isNotBlank()) {
-                                Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
                             }
-
                             showDialog = true
+                            taskDetailViewModel.resetState()
                         }
                     }
 

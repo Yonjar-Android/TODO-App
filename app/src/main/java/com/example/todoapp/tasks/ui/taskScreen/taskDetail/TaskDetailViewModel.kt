@@ -1,5 +1,7 @@
 package com.example.todoapp.tasks.ui.taskScreen.taskDetail
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
@@ -8,18 +10,19 @@ import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
 import com.example.todoapp.tasks.domain.models.Category
 import com.example.todoapp.tasks.domain.models.TaskDom
-import com.google.firebase.firestore.DocumentReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(private val repositoryImp: TasksRepositoryImp) :
     ViewModel() {
 
-    private val _state = MutableStateFlow<TaskDetailState>(TaskDetailState.Initial)
+    private val _state = MutableStateFlow<TaskDetailState>(TaskDetailState.Loading)
     var state: StateFlow<TaskDetailState> = _state
 
     private val _categories = MutableStateFlow<List<Category>>(mutableListOf())
@@ -59,6 +62,7 @@ class TaskDetailViewModel @Inject constructor(private val repositoryImp: TasksRe
         }
     }
 
+     @RequiresApi(Build.VERSION_CODES.O)
      fun updateTask(
         taskId: String,
         name: String,
@@ -71,8 +75,10 @@ class TaskDetailViewModel @Inject constructor(private val repositoryImp: TasksRe
         category: String
     ) {
         _state.value = TaskDetailState.Loading
+
         viewModelScope.launch {
             try {
+                if (!validations(name, date, category)) return@launch
 
                 val categoryReference = repositoryImp.getCategoryReference(category)
 
@@ -130,5 +136,38 @@ class TaskDetailViewModel @Inject constructor(private val repositoryImp: TasksRe
                 _state.value = TaskDetailState.Error("Error: ${e.message}")
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun validations(name: String, date: String, category: String): Boolean {
+        if (name.isBlank()) {
+            _state.value = TaskDetailState.Error("Rellene el campo nombre")
+            return false
+        }
+        if (category.isBlank()) {
+            _state.value = TaskDetailState.Error("Seleccione una categoría")
+            return false
+        }
+        if (date.isBlank()) {
+            _state.value = TaskDetailState.Error("Seleccione una fecha")
+            return false
+        }
+
+        // Date Validation
+        val formatter =
+            DateTimeFormatter.ofPattern("dd/MM/yyyy") // Match your date formatval taskDate = LocalDate.parse(date, formatter)
+        val today = LocalDate.now()
+        val dateSelected = LocalDate.parse(date, formatter)
+
+        if (dateSelected.isBefore(today)) {
+            _state.value = TaskDetailState.Error("No puede seleccionar una fecha anterior a hoy")
+            return false
+        }
+
+        return true
+    }
+
+    fun resetState(){
+        _state.value = TaskDetailState.Initial
     }
 }
