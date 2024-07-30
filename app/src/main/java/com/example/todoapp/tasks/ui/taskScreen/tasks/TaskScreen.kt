@@ -41,6 +41,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -58,6 +59,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavHostController
 import com.example.todoapp.R
 import com.example.todoapp.tasks.domain.models.Category
@@ -88,6 +91,21 @@ fun TaskScreen(
     LaunchedEffect(state.value) {
         fetchedCategories.value = viewModel.categories
         fetchedTasks.value = viewModel.tasks
+    }
+
+    // Observe navigation changes
+    DisposableEffect(navHostController) {
+        val backStackEntry = navHostController.currentBackStackEntry
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                // Fetch tasks when returning to this screen
+                viewModel.getAllTasks()
+            }
+        }
+        backStackEntry?.lifecycle?.addObserver(observer)
+        onDispose {
+            backStackEntry?.lifecycle?.removeObserver(observer)
+        }
     }
 
     val showToast = viewModel.showToast.collectAsState()
