@@ -42,7 +42,8 @@ class TaskScreenViewModelTest {
     private val taskName = "Create the database"
     private val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
-    private val error = "An error has occurred"
+    private val error = "Error: An error has occurred"
+    private val errorException = "An error has occurred"
 
 
     @Before
@@ -95,7 +96,7 @@ class TaskScreenViewModelTest {
     @Test
     fun `getCategories should emit Error state if an exception occurs`() = runTest {
         //Given
-        Mockito.`when`(repositoryImp.getAllCategories()).thenThrow(RuntimeException(error))
+        Mockito.`when`(repositoryImp.getAllCategories()).thenThrow(RuntimeException(errorException))
 
         //When
         viewModel.getCategories()
@@ -107,7 +108,7 @@ class TaskScreenViewModelTest {
             val state = awaitItem()
             assertTrue(state is TaskScreenState.Error)
             val errorState = state as TaskScreenState.Error
-            assertEquals(errorState.error, "Error: $error")
+            assertEquals(errorState.error, error)
         }
     }
 
@@ -191,7 +192,7 @@ class TaskScreenViewModelTest {
             val state = awaitItem()
             assertTrue(state is TaskScreenState.Error)
             val errorState = state as TaskScreenState.Error
-            assertEquals(errorState.error, "Error: $error")
+            assertEquals(errorState.error, error)
         }
     }
 
@@ -253,7 +254,7 @@ class TaskScreenViewModelTest {
                 category = categoryMock,
                 date = date
             )
-        ).thenThrow(RuntimeException(error))
+        ).thenThrow(RuntimeException(errorException))
 
         //When
         viewModel.createTask(
@@ -273,7 +274,7 @@ class TaskScreenViewModelTest {
             val state = awaitItem()
             assertTrue(state is TaskScreenState.Error)
             val errorState = state as TaskScreenState.Error
-            assertEquals(errorState.error, "Error: $error")
+            assertEquals(errorState.error, error)
         }
     }
 
@@ -327,7 +328,7 @@ class TaskScreenViewModelTest {
             val state = awaitItem()
             assertTrue(state is TaskScreenState.Error)
             val errorState = state as TaskScreenState.Error
-            assertEquals(errorState.error, "Error: $error")
+            assertEquals(errorState.error, error)
         }
     }
 
@@ -335,7 +336,7 @@ class TaskScreenViewModelTest {
     @Test
     fun `getAllTasks should emit Error state if an exception occurs`() = runTest {
         //Given
-        Mockito.`when`(repositoryImp.getAllTasks()).thenThrow(RuntimeException(error))
+        Mockito.`when`(repositoryImp.getAllTasks()).thenThrow(RuntimeException(errorException))
 
         //When
         viewModel.getAllTasks()
@@ -347,7 +348,7 @@ class TaskScreenViewModelTest {
             val state = awaitItem()
             assertTrue(state is TaskScreenState.Error)
             val errorState = state as TaskScreenState.Error
-            assertEquals(errorState.error, "Error: $error")
+            assertEquals(errorState.error, error)
         }
     }
 
@@ -367,7 +368,7 @@ class TaskScreenViewModelTest {
             val state = awaitItem()
             assertTrue(state is TaskScreenState.Error)
             val errorState = state as TaskScreenState.Error
-            assertEquals(errorState.error, "Error: $error")
+            assertEquals(errorState.error, error)
         }
     }
 
@@ -375,7 +376,7 @@ class TaskScreenViewModelTest {
     fun `onCheckedChange should emit Error state if an exception occurs`() = runTest {
         //Given
         Mockito.`when`(repositoryImp.onCheckChange("a1b2c3d4", true))
-            .thenThrow(RuntimeException(error))
+            .thenThrow(RuntimeException(errorException))
 
         //When
         viewModel.onCheckedChange("a1b2c3d4", true)
@@ -387,7 +388,7 @@ class TaskScreenViewModelTest {
             val state = awaitItem()
             assertTrue(state is TaskScreenState.Error)
             val errorState = state as TaskScreenState.Error
-            assertEquals(errorState.error, "Error: $error")
+            assertEquals(errorState.error, error)
         }
     }
 }

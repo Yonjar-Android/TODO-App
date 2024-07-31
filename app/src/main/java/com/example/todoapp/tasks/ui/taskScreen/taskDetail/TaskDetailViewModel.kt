@@ -119,7 +119,7 @@ class TaskDetailViewModel @Inject constructor(private val repositoryImp: TasksRe
         }
     }
 
-    private fun getCategories() {
+     fun getCategories() {
         viewModelScope.launch {
             try {
                 when (val response = repositoryImp.getAllCategories()) {
