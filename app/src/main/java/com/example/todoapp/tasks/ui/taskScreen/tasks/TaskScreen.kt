@@ -179,7 +179,9 @@ fun TaskScreen(
 
             TaskScreenState.Loading -> {
                 Box(
-                    modifier = Modifier.fillMaxSize().background(Color.White),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
                     Loading()
@@ -189,8 +191,9 @@ fun TaskScreen(
 
             is TaskScreenState.Success -> {
                 if (showToast.value && currentState.message.isNotBlank()) {
-                        Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
-                        viewModel.getAllTasks()
+                    Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
+                    viewModel.resetState()
+                    viewModel.getAllTasks()
                 }
                 viewModel.resetState()
             }
@@ -436,7 +439,11 @@ fun DropDowsMenuCategories(
 }
 
 @Composable
-fun TaskCheckBox(task: TaskDom,onCheckedChange: (String, Boolean) -> Unit, goToDetail:(String) -> Unit) {
+fun TaskCheckBox(
+    task: TaskDom,
+    onCheckedChange: (String, Boolean) -> Unit,
+    goToDetail: (String) -> Unit
+) {
     Spacer(modifier = Modifier.size(8.dp))
     Row(
         verticalAlignment = Alignment.CenterVertically,

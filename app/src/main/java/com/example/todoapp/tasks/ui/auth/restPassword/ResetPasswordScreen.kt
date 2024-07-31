@@ -105,7 +105,7 @@ fun ResetPasswordScreen(
             ResetPasswordState.Initial -> {}
 
             ResetPasswordState.Loading -> {
-                Box(modifier = Modifier
+                Box(modifier = Modifier.clip(CircleShape)
                     .constrainAs(loading) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)

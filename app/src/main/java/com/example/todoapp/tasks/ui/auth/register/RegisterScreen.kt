@@ -131,7 +131,7 @@ fun RegisterScreen(
                 viewModel.resetState()
             }
 
-            RegisterState.Loading -> Box(modifier = Modifier
+            RegisterState.Loading -> Box(modifier = Modifier.clip(CircleShape)
                 .constrainAs(loading) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
