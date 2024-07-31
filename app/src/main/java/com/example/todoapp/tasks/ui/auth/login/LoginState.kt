@@ -1,6 +1,6 @@
 package com.example.todoapp.tasks.ui.auth.login
 
-import com.example.todoapp.tasks.domain.models.User
+import com.example.todoapp.tasks.domain.models.UserM
 
 sealed class LoginState {
 
@@ -10,6 +10,6 @@ sealed class LoginState {
 
     data class Error(val error:String?): LoginState()
 
-    data class Success(val user:User): LoginState()
+    data class Success(val user:UserM): LoginState()
 
 }

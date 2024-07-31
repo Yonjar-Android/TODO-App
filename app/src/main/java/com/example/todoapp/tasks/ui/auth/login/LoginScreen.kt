@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.example.todoapp.R
-import com.example.todoapp.tasks.domain.models.User
+import com.example.todoapp.tasks.domain.models.UserM
 import com.example.todoapp.tasks.ui.Loading
 import com.example.todoapp.tasks.ui.TextFieldComp
 import com.example.todoapp.tasks.ui.TonalButton
@@ -156,7 +156,7 @@ fun successFun(
     context: Context,
     viewModel: LoginViewModel,
     navHostController: NavHostController,
-    user: User
+    user: UserM
 ) {
     Toast.makeText(context, "Bienvenido", Toast.LENGTH_SHORT).show()
 
