@@ -28,6 +28,7 @@ import com.example.todoapp.tasks.ui.taskScreen.MainTaskScreen
 import com.example.todoapp.tasks.ui.taskScreen.taskDetail.TaskDetail
 import com.example.todoapp.tasks.ui.taskScreen.taskDetail.TaskDetailViewModel
 import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenViewModel
+import com.example.todoapp.tasks.ui.user.UserScreenViewModel
 import com.example.todoapp.ui.theme.TodoAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,6 +44,8 @@ class MainActivity : ComponentActivity() {
     private val taskScreenViewModel: TaskScreenViewModel by viewModels()
 
     private val taskDetailViewModel: TaskDetailViewModel by viewModels()
+
+    private val userScreenViewModel: UserScreenViewModel by viewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,7 +104,8 @@ class MainActivity : ComponentActivity() {
                             MainTaskScreen(
                                 navHostController = navController,
                                 email = email ?: "",
-                                taskScreenViewModel = taskScreenViewModel
+                                taskScreenViewModel = taskScreenViewModel,
+                                userScreenViewModel = userScreenViewModel
                             )
                         }
                     }

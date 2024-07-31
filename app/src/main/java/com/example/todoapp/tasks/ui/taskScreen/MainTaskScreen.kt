@@ -26,13 +26,15 @@ import com.example.todoapp.R
 import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreen
 import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenViewModel
 import com.example.todoapp.tasks.ui.user.UserScreen
+import com.example.todoapp.tasks.ui.user.UserScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainTaskScreen(
     navHostController: NavHostController,
     email: String,
-    taskScreenViewModel: TaskScreenViewModel
+    taskScreenViewModel: TaskScreenViewModel,
+    userScreenViewModel: UserScreenViewModel
 ) {
 
     val navigationController = rememberNavController()
@@ -46,11 +48,11 @@ fun MainTaskScreen(
                 startDestination = "taskScreen"
             ) {
                 composable(route = "taskScreen") {
-                    TaskScreen(email,taskScreenViewModel, navHostController)
+                    TaskScreen(email, taskScreenViewModel, navHostController)
                 }
 
                 composable(route = "userScreen") {
-                    UserScreen(navHostController, email)
+                    UserScreen(userScreenViewModel, navHostController, email)
                 }
             }
 
