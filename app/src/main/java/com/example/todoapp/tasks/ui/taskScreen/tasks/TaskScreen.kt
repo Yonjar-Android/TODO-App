@@ -24,10 +24,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -35,6 +38,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,6 +50,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -131,12 +136,15 @@ fun TaskScreen(
                     ) {
                         if (fetchedTasks.value != null) {
                             items(fetchedTasks.value!!) { task ->
-                                TaskCheckBox(task = task, onCheckedChange = { taskId, check ->
-                                    viewModel.onCheckedChange(taskId = taskId, check)
-                                },
+                                TaskCheckBox(
+                                    task = task, onCheckedChange = { taskId, check ->
+                                        viewModel.onCheckedChange(taskId = taskId, check)
+                                    },
                                     goToDetail = { taskId ->
                                         navHostController.navigate("taskDetailScreen/$taskId")
-                                    })
+                                    },
+                                    viewModel = viewModel
+                                )
                             }
                         }
                     }
@@ -442,7 +450,8 @@ fun DropDowsMenuCategories(
 fun TaskCheckBox(
     task: TaskDom,
     onCheckedChange: (String, Boolean) -> Unit,
-    goToDetail: (String) -> Unit
+    goToDetail: (String) -> Unit,
+    viewModel: TaskScreenViewModel
 ) {
     Spacer(modifier = Modifier.size(8.dp))
     Row(
@@ -474,8 +483,74 @@ fun TaskCheckBox(
                 .weight(1f)
                 .clip(CircleShape)
         )
+        DropDownDelete(task, viewModel)
+
     }
     Spacer(modifier = Modifier.size(8.dp))
+}
+
+@Composable
+fun DropDownDelete(task: TaskDom, viewModel:TaskScreenViewModel) {
+    var openDialog by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        IconButton(
+            onClick = {
+                expanded = true
+            }
+        ) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "Open Menu"
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.align(Alignment.TopEnd)
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(text = "Eliminar")
+                },
+                onClick = {
+                    expanded = false
+                    openDialog = true
+                }
+            )
+        }
+    }
+    if (openDialog) {
+        DialogDelete(task = task, viewModel) { openDialog = false }
+    }
+}
+
+@Composable
+fun DialogDelete(task: TaskDom, viewModel: TaskScreenViewModel, close: () -> Unit) {
+    AlertDialog(onDismissRequest = {}, confirmButton = {
+        TextButton(onClick = {
+            viewModel.deleteTask(task.taskId)
+            close()
+        }) {
+            Text(text = "Eliminar")
+        }
+    },
+        dismissButton = {
+            TextButton(onClick = {
+                close()
+            }) {
+                Text(text = "Cancelar")
+
+            }
+        },
+        title = {
+            Text(text = "Eliminar tarea")
+        },
+        text = {
+            Text(text = "¿Quieres eliminar la tarea: ${task.name}?")
+        })
 }
 
 

@@ -37,6 +37,8 @@ interface TasksRepository {
 
     suspend fun getTaskById(taskId:String): TaskDetailResult
 
+    suspend fun deleteTask(taskId: String): TaskResult
+
     suspend fun onCheckChange(taskId:String, check:Boolean):TaskResult
 
 }

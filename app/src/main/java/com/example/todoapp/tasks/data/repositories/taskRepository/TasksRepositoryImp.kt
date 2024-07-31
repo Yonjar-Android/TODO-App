@@ -195,6 +195,18 @@ class TasksRepositoryImp @Inject constructor(
         }
     }
 
+    override suspend fun deleteTask(taskId: String): TaskResult {
+        return suspendCancellableCoroutine { continuation ->
+            firestore.collection("Tareas").document(taskId).delete()
+                .addOnSuccessListener {
+                    continuation.resume(TaskResult.Success("Task deleted successfully"))
+                }
+                .addOnFailureListener { exception ->
+                    continuation.resume(TaskResult.Error(exception.message ?: ""))
+                }
+        }
+    }
+
     override suspend fun onCheckChange(taskId: String, check: Boolean): TaskResult {
         return suspendCancellableCoroutine { continuation ->
             firestore.collection("Tareas").document(taskId)

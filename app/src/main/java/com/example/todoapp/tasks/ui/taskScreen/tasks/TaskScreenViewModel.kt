@@ -180,6 +180,29 @@ class TaskScreenViewModel @Inject constructor(
         }
     }
 
+    fun deleteTask(taskId:String){
+        _state.value = TaskScreenState.Loading
+        viewModelScope.launch {
+            try {
+
+                val response = repositoryImp.deleteTask(taskId)
+
+                when(response){
+                    is TaskResult.Error -> {
+                        _state.value = TaskScreenState.Error("Error: ${response.error}")
+                    }
+                    is TaskResult.Success -> {
+                        _showToast.value = true
+                        _state.value = TaskScreenState.Success("Se ha eliminado la tarea exitosamente")
+                    }
+                }
+
+            } catch (e:Exception){
+                _state.value = TaskScreenState.Error("Error: ${e.message}")
+            }
+        }
+    }
+
     fun resetState() {
         _state.value = TaskScreenState.Initial
         _showToast.value = false // Reset flag to hide Toast
