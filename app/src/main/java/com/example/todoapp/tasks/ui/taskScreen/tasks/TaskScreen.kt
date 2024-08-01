@@ -40,6 +40,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -125,26 +126,56 @@ fun TaskScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
+        var query by remember {
+            mutableStateOf("")
+        }
+
         Scaffold(
             content = {
-                BackgroundScreen(image = R.drawable.main_bg) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 8.dp),
-                        contentPadding = it
+
+                Row {
+                    SearchBar(
+                        query = query,
+                        onQueryChange = { query = it },
+                        onSearch = {
+                            if (query.isBlank()) {
+                                fetchedTasks.value = viewModel.tasks
+                            }
+
+                            val newTask = viewModel.tasks?.filter {
+                                it.name.lowercase().contains(query.lowercase())
+                            }
+                            fetchedTasks.value = newTask
+                        },
+                        active = true,
+                        onActiveChange = {},
+                        placeholder = {
+                            Text(text = "Realiza una búsqueda")
+                        }
                     ) {
-                        if (fetchedTasks.value != null) {
-                            items(fetchedTasks.value!!) { task ->
-                                TaskCheckBox(
-                                    task = task, onCheckedChange = { taskId, check ->
-                                        viewModel.onCheckedChange(taskId = taskId, check)
-                                    },
-                                    goToDetail = { taskId ->
-                                        navHostController.navigate("taskDetailScreen/$taskId")
-                                    },
-                                    viewModel = viewModel
-                                )
+                        BackgroundScreen(image = R.drawable.main_bg) {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(horizontal = 8.dp),
+                                contentPadding = it
+                            ) {
+                                if (fetchedTasks.value != null) {
+                                    items(fetchedTasks.value!!) { task ->
+                                        TaskCheckBox(
+                                            task = task, onCheckedChange = { taskId, check ->
+                                                viewModel.onCheckedChange(
+                                                    taskId = taskId,
+                                                    check
+                                                )
+                                            },
+                                            goToDetail = { taskId ->
+                                                navHostController.navigate("taskDetailScreen/$taskId")
+                                            },
+                                            viewModel = viewModel
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -490,7 +521,7 @@ fun TaskCheckBox(
 }
 
 @Composable
-fun DropDownDelete(task: TaskDom, viewModel:TaskScreenViewModel) {
+fun DropDownDelete(task: TaskDom, viewModel: TaskScreenViewModel) {
     var openDialog by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
