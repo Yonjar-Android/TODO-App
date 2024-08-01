@@ -2,6 +2,8 @@ package com.example.todoapp.motherObject
 
 import com.example.todoapp.tasks.data.models.UserModel
 import com.example.todoapp.tasks.data.repositories.authRepository.CreateUserResult
+import com.example.todoapp.tasks.data.repositories.authRepository.ResetResult
+import com.example.todoapp.tasks.data.repositories.authRepository.UserResult
 
 object UserMotherObject {
     val userModel = UserModel(
@@ -10,8 +12,18 @@ object UserMotherObject {
     )
 
     val user = userModel.toUser()
+    private val error = "An error has occurred"
 
-     val createUserResult = CreateUserResult.Success(UserMotherObject.user)
+    //CreateUserResults
+     val createUserResult = CreateUserResult.Success(user)
      val createErrorNullUserResult = CreateUserResult.Error(null)
-     val createErrorUserResult = CreateUserResult.Error("An error has occurred")
+     val createErrorUserResult = CreateUserResult.Error(error)
+
+    //UserResults
+    val userResultSuccess = UserResult.Success(user)
+    val userResultError = UserResult.Error(error)
+
+    //ResetResults
+    val resetResultSuccess = ResetResult.Success("Success message")
+    val resetResultError = ResetResult.Error(error)
 }

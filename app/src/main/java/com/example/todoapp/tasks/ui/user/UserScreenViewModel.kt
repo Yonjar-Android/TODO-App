@@ -46,7 +46,10 @@ class UserScreenViewModel @Inject constructor(private val repositoryImp: AuthRep
                     is ResetResult.Error -> {
                         _state.value = UserScreenState.Error("Error: ${response.error}")
                     }
-                    is ResetResult.Success -> {}
+
+                    is ResetResult.Success -> {
+                        _state.value = UserScreenState.Initial
+                    }
                 }
             } catch (e: Exception) {
                 _state.value = UserScreenState.Error("Error: ${e.message}")
