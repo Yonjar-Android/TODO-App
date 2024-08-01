@@ -15,7 +15,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
@@ -39,6 +40,7 @@ class TaskScreenViewModelTest {
 
 
     //variables
+    private val taskId = "abc123"
     private val taskName = "Create the database"
     private val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
@@ -355,11 +357,11 @@ class TaskScreenViewModelTest {
     @Test
     fun `onCheckedChange should emit Error state if TaskResult_Error is returned`() = runTest {
         //Given
-        Mockito.`when`(repositoryImp.onCheckChange("a1b2c3d4", true))
+        Mockito.`when`(repositoryImp.onCheckChange(taskId, true))
             .thenReturn(TaskMotherObject.TaskResultError)
 
         //When
-        viewModel.onCheckedChange("a1b2c3d4", true)
+        viewModel.onCheckedChange(taskId, true)
 
         //Then
         viewModel.state.test {
@@ -375,15 +377,77 @@ class TaskScreenViewModelTest {
     @Test
     fun `onCheckedChange should emit Error state if an exception occurs`() = runTest {
         //Given
-        Mockito.`when`(repositoryImp.onCheckChange("a1b2c3d4", true))
+        Mockito.`when`(repositoryImp.onCheckChange(taskId, true))
             .thenThrow(RuntimeException(errorException))
 
         //When
-        viewModel.onCheckedChange("a1b2c3d4", true)
+        viewModel.onCheckedChange(taskId, true)
 
         //Then
         viewModel.state.test {
             assertTrue(awaitItem() is TaskScreenState.Initial)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskScreenState.Error)
+            val errorState = state as TaskScreenState.Error
+            assertEquals(errorState.error, error)
+        }
+    }
+
+    @Test
+    fun `deleteTask should emit Success state if TaskResult_Success is received`() = runTest {
+        //Given
+        Mockito.`when`(repositoryImp.deleteTask(taskId))
+            .thenReturn(TaskMotherObject.TaskResultSuccess)
+
+        //When
+        viewModel.deleteTask(taskId)
+
+        //Then
+        viewModel.state.test {
+            assertTrue(awaitItem() is TaskScreenState.Loading)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskScreenState.Success)
+            val successState = state as TaskScreenState.Success
+            assertEquals(successState.message, TaskMotherObject.TaskResultSuccess.message)
+        }
+    }
+
+    @Test
+    fun `deleteTask should emit Error state if TaskResult_Error is received`() = runTest {
+        //Given
+        Mockito.`when`(repositoryImp.deleteTask(taskId))
+            .thenReturn(TaskMotherObject.TaskResultError)
+
+        //When
+        viewModel.deleteTask(taskId)
+
+        //Then
+        //Then
+        viewModel.state.test {
+            assertTrue(awaitItem() is TaskScreenState.Loading)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskScreenState.Error)
+            val errorState = state as TaskScreenState.Error
+            assertEquals(errorState.error, error)
+        }
+    }
+
+    @Test
+    fun `deleteTask should emit Error state if an Exception occurs`() = runTest {
+        //Given
+        Mockito.`when`(repositoryImp.deleteTask(taskId))
+            .thenThrow(RuntimeException(errorException))
+
+        //When
+        viewModel.deleteTask(taskId)
+
+        //Then
+        //Then
+        viewModel.state.test {
+            assertTrue(awaitItem() is TaskScreenState.Loading)
             advanceUntilIdle()
             val state = awaitItem()
             assertTrue(state is TaskScreenState.Error)

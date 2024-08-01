@@ -27,7 +27,7 @@ object TaskMotherObject {
 
     val categoryResultError = CategoryResult.Error(errorMessage)
 
-    val TaskResultSuccess = TaskResult.Success("The task was created successfully")
+    val TaskResultSuccess = TaskResult.Success("Success Message")
     val TaskResultError = TaskResult.Error(errorMessage)
 
 }

@@ -193,7 +193,7 @@ class TaskScreenViewModel @Inject constructor(
                     }
                     is TaskResult.Success -> {
                         _showToast.value = true
-                        _state.value = TaskScreenState.Success("Se ha eliminado la tarea exitosamente")
+                        _state.value = TaskScreenState.Success(response.message)
                     }
                 }
 
