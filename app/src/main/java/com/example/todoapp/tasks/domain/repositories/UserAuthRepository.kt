@@ -8,6 +8,8 @@ interface UserAuthRepository {
 
     suspend fun loginUser(email:String, password:String): CreateUserResult
 
+    suspend fun logOutUser(): ResetResult
+
     suspend fun createUser(name:String, email: String, password: String): CreateUserResult
 
     suspend fun resetPassword(email: String): ResetResult

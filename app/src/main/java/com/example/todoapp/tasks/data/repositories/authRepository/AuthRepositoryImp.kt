@@ -46,6 +46,15 @@ class AuthRepositoryImp @Inject constructor(
         }
     }
 
+    override suspend fun logOutUser(): ResetResult {
+       return try {
+           firebaseAuth.signOut()
+           ResetResult.Success("Has cerrado sesión")
+       } catch (e: Exception){
+           ResetResult.Error(e.message ?: "")
+       }
+    }
+
     override suspend fun createUser(
         name: String,
         email: String,

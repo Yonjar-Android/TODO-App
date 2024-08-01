@@ -126,6 +126,9 @@ fun UserScreen(
         DialogOut(navHostController = navHostController,
             close = {
                 openDialog = false
+            },
+            logOut = {
+                userScreenViewModel.logOutUser()
             })
     }
 }
@@ -142,17 +145,20 @@ fun TextInfoTitle(info: String, fontWeight: FontWeight) {
 }
 
 @Composable
-fun DialogOut(navHostController: NavHostController, close: () -> Unit) {
+fun DialogOut(navHostController: NavHostController,
+              close: () -> Unit,
+              logOut: () -> Unit) {
     AlertDialog(onDismissRequest = {
 
     }, confirmButton = {
         TextButton(onClick = {
-            close()
             navHostController.popBackStack(navHostController.graph.startDestinationId, false)
             navHostController.navigate("logoAndButtons") {
                 popUpTo(navHostController.graph.startDestinationId) {
                     inclusive = true
                 }
+                close()
+                logOut()
             }
         }) {
             Text(text = "Cerrar Sesión")
