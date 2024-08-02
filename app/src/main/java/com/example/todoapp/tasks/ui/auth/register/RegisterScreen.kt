@@ -25,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,10 +89,10 @@ fun RegisterScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComp("Nombre Completo",name) { name = it }
-            TextFieldComp("Correo Electrónico",email) { email = it }
-            TextFieldComp("Contraseña",password) { password = it }
-            TextFieldComp("Repetir contraseña", repeatPassword) { repeatPassword = it }
+            TextFieldComp(stringResource(id = R.string.fullName),name) { name = it }
+            TextFieldComp(stringResource(id = R.string.email),email) { email = it }
+            TextFieldComp(stringResource(id = R.string.password),password) { password = it }
+            TextFieldComp(stringResource(id = R.string.repeatPassword), repeatPassword) { repeatPassword = it }
         }
 
         Column(
@@ -102,7 +103,7 @@ fun RegisterScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TonalButton(title = "Registrar") {
+            TonalButton(title = stringResource(id = R.string.registerButton)) {
                 viewModel.createUser(
                     name = name,
                     password = password,
@@ -114,7 +115,7 @@ fun RegisterScreen(
                 navHostController.navigate("loginScreen")
             }) {
                 Text(
-                    text = "¿Ya tienes una cuenta?",
+                    text = stringResource(id = R.string.haveAnAccount),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold,
@@ -131,7 +132,8 @@ fun RegisterScreen(
                 viewModel.resetState()
             }
 
-            RegisterState.Loading -> Box(modifier = Modifier.clip(CircleShape)
+            RegisterState.Loading -> Box(modifier = Modifier
+                .clip(CircleShape)
                 .constrainAs(loading) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
@@ -160,7 +162,7 @@ fun SuccessFun(
     navHostController: NavHostController,
     viewModel: RegisterViewModel
 ) {
-    Toast.makeText(context, "Usuario creado exitosamente", Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, stringResource(id = R.string.userSuccessfulCreation), Toast.LENGTH_SHORT).show()
 
     navHostController.navigate("loginScreen")
 

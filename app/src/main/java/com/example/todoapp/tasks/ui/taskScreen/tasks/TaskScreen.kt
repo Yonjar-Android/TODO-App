@@ -59,6 +59,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -150,7 +151,7 @@ fun TaskScreen(
                         active = true,
                         onActiveChange = {},
                         placeholder = {
-                            Text(text = "Realiza una búsqueda")
+                            Text(text = stringResource(id = R.string.makeASearch))
                         }
                     ) {
                         BackgroundScreen(image = R.drawable.main_bg) {
@@ -315,10 +316,10 @@ fun DialogTaskAdd(
 
         ) {
 
-            TextFieldComp(labelField = "Nombre de la tarea", name) { name = it }
+            TextFieldComp(labelField = stringResource(id = R.string.taskName), name) { name = it }
 
             TextFieldComp(
-                "Descripción",
+                stringResource(id = R.string.description),
                 height = 120.dp,
                 maxLin = 5,
                 singleL = false,
@@ -340,7 +341,7 @@ fun DialogTaskAdd(
 
             DateFieldComp(dateToString)
 
-            TonalButton(title = " Elegir Fecha ") {
+            TonalButton(title = " ${stringResource(id = R.string.chooseDate)} ") {
                 closeDate()
             }
 
@@ -354,7 +355,7 @@ fun DialogTaskAdd(
                         onDismissRequest = {},
                         confirmButton = {
                             TextButton(onClick = { closeDate() }) {
-                                Text(text = "Aceptar")
+                                Text(text = stringResource(id = R.string.acceptButton))
                             }
                         }) {
                         DatePicker(state = dateState)
@@ -366,7 +367,7 @@ fun DialogTaskAdd(
             /////////
 
             TextFieldComp(
-                labelField = "Entregables",
+                labelField = stringResource(id = R.string.deliverables),
                 maxLin = 4,
                 height = 100.dp,
                 singleL = false,
@@ -377,7 +378,7 @@ fun DialogTaskAdd(
 
 
             TonalButton(
-                title = "Crear",
+                title = stringResource(id = R.string.createButton),
                 modifier = Modifier,
                 color = ButtonDefaults.buttonColors(containerColor = Color(0xFF6E56FD))
             )
@@ -410,7 +411,7 @@ fun DateFieldComp(date: String) {
     ) {
 
         Text(
-            text = "Fecha Límite",
+            text = stringResource(id = R.string.deadlineDate),
             fontWeight = FontWeight.SemiBold,
             color = Color.White,
             fontSize = 20.sp,
@@ -452,7 +453,7 @@ fun DropDowsMenuCategories(
             value = categorySelected,
             onValueChange = {}, // Read-only, updates on selection from dropdown
             readOnly = true,
-            label = { Text("Category") },
+            label = { Text(stringResource(id = R.string.category)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -544,7 +545,7 @@ fun DropDownDelete(task: TaskDom, viewModel: TaskScreenViewModel) {
         ) {
             DropdownMenuItem(
                 text = {
-                    Text(text = "Eliminar")
+                    Text(text = stringResource(id = R.string.deleteButton))
                 },
                 onClick = {
                     expanded = false
@@ -565,22 +566,22 @@ fun DialogDelete(task: TaskDom, viewModel: TaskScreenViewModel, close: () -> Uni
             viewModel.deleteTask(task.taskId)
             close()
         }) {
-            Text(text = "Eliminar")
+            Text(text = stringResource(id = R.string.deleteButton))
         }
     },
         dismissButton = {
             TextButton(onClick = {
                 close()
             }) {
-                Text(text = "Cancelar")
+                Text(text = stringResource(id = R.string.cancelButton))
 
             }
         },
         title = {
-            Text(text = "Eliminar tarea")
+            Text(text = stringResource(id = R.string.deleteTask))
         },
         text = {
-            Text(text = "¿Quieres eliminar la tarea: ${task.name}?")
+            Text(text = stringResource(id = R.string.wannaDeleteTask, task.name))
         })
 }
 

@@ -1,3 +1,51 @@
 <resources>
     <string name="app_name">Todo App</string>
+
+    Authentication Strings
+    <string name="fullName">Full Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="repeatPassword">Repeat Password</string>
+    <string name="forgotYourPassword">Forgot your password?</string>
+    <string name="haveAnAccount">Already have an account?</string>
+    <string name="dontHaveAnAccount">Don\'t you have an account?</string>
+    <string name="enterButton">Enter</string>
+
+    <string name="sendMail">Send mail</string>
+
+    <string name="loginButton">Login</string>
+    <string name="RegistButton">Register</string>
+
+    <string name="registerButton">Register</string>
+
+    Authentication Messages
+    <string name="welcome">Welcome</string>
+    <string name="userSuccessfulCreation">User created successfully</string>
+
+
+    Task Strings Form
+
+    <string name="taskName">Task Name</string>
+    <string name="description">Description</string>
+    <string name="deliverables">Deliverables</string>
+
+    <string name="makeASearch">Do a search</string>
+    <string name="chooseDate">Choose a date</string>
+    <string name="acceptButton">Accept</string>
+    <string name="createButton">Create</string>
+    <string name="updateButton">Update</string>
+    <string name="category">Category</string>
+    <string name="taskDetail">Task detail</string>
+
+    <string name="deadlineDate">Deadline</string>
+
+    <string name="deleteButton">Delete</string>
+    <string name="deleteTask">Delete Task</string>
+    <string name="wannaDeleteTask">Do you want to delete the task called: %s?</string>
+
+    Logout String
+    <string name="logOut">Log out</string>
+    <string name="cancelButton">Cancel</string>
+    <string name="logOutAccount">Would you like to log out?</string>
+
 </resources>

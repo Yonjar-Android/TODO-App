@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Todo App</string>
+
+    Authentication Strings
+    <string name="fullName">Nombre Completo</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="repeatPassword">Repetir Contraseña</string>
+    <string name="forgotYourPassword">¿Has olvidado tu contraseña?</string>
+    <string name="haveAnAccount">¿Ya tienes una cuenta?</string>+
+    <string name="dontHaveAnAccount">¿No tienes una cuenta?</string>
+    <string name="enterButton">Ingresar</string>
+
+    <string name="sendMail">Enviar correo</string>
+
+    <string name="loginButton">Iniciar Sesión</string>
+    <string name="RegistButton">Regístrate</string>
+
+    <string name="registerButton">Registrar</string>
+
+    <string name="welcome">Bienvenido</string>
+    <string name="userSuccessfulCreation">Usuario creado exitosamente</string>
+
+    Task Strings Form
+
+    <string name="taskName">Nombre de la tarea</string>
+    <string name="description">Descripción</string>
+    <string name="deliverables">Entregables</string>
+
+    <string name="makeASearch">Busca una tarea</string>
+    <string name="chooseDate">Elegir fecha</string>
+    <string name="acceptButton">Aceptar</string>
+    <string name="createButton">Crear</string>
+    <string name="updateButton">Actualizar</string>
+    <string name="category">Categoría</string>
+    <string name="taskDetail">Detalle de la tarea</string>
+
+    <string name="deadlineDate">Fecha límite</string>
+
+    <string name="deleteButton">Eliminar</string>
+    <string name="deleteTask">Eliminar tarea</string>
+    <string name="wannaDeleteTask">¿Quieres eliminar la tarea: %s?</string>
+
+    Logout String
+    <string name="logOut">Cerrar Sesión</string>
+    <string name="cancelButton">Cancelar</string>
+    <string name="logOutAccount">¿Deseas salir de tu cuenta actual?</string>
+</resources>

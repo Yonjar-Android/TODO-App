@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
@@ -80,7 +81,7 @@ fun ResetPasswordScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComp(labelField = "Correo electrónico",email) { email = it }
+            TextFieldComp(labelField = stringResource(id = R.string.email),email) { email = it }
         }
 
         Column(
@@ -91,7 +92,7 @@ fun ResetPasswordScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TonalButton(title = "Enviar correo") {
+            TonalButton(title = stringResource(id = R.string.sendMail)) {
                 viewModel.resetPassword(email.lowercase())
             }
         }
@@ -105,7 +106,8 @@ fun ResetPasswordScreen(
             ResetPasswordState.Initial -> {}
 
             ResetPasswordState.Loading -> {
-                Box(modifier = Modifier.clip(CircleShape)
+                Box(modifier = Modifier
+                    .clip(CircleShape)
                     .constrainAs(loading) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)

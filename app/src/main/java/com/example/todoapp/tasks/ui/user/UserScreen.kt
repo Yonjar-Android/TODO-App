@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -112,9 +113,9 @@ fun UserScreen(
 
                         Spacer(modifier = Modifier.padding(bottom = 20.dp))
 
-                        TextInfoTitle("Nombre Completo", fontWeight = FontWeight.SemiBold)
+                        TextInfoTitle(stringResource(id = R.string.fullName), fontWeight = FontWeight.SemiBold)
                         TextInfoTitle(currrentState.user.name, FontWeight.Normal)
-                        TextInfoTitle("Correo electrónico", FontWeight.SemiBold)
+                        TextInfoTitle(stringResource(id = R.string.email), FontWeight.SemiBold)
                         TextInfoTitle(currrentState.user.email, FontWeight.Normal)
                     }
                 }
@@ -161,19 +162,19 @@ fun DialogOut(navHostController: NavHostController,
                 logOut()
             }
         }) {
-            Text(text = "Cerrar Sesión")
+            Text(text = stringResource(id = R.string.logOut))
         }
     }, dismissButton = {
         TextButton(onClick = {
             close()
         }) {
-            Text(text = "Cancelar")
+            Text(text = stringResource(id = R.string.cancelButton))
         }
     },
         title = {
-            Text(text = "Cerrar Sesión")
+            Text(text = stringResource(id = R.string.logOut))
         },
         text = {
-            Text(text = "¿Deseas salir de la aplicación?")
+            Text(text = stringResource(id = R.string.logOutAccount))
         })
 }

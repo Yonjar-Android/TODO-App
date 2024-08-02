@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
@@ -92,7 +93,9 @@ fun TaskDetail(
                         TaskDetailState.Initial -> {}
                         TaskDetailState.Loading -> {
                             Box(
-                                modifier = Modifier.fillMaxSize().background(Color.White),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.White),
                                 contentAlignment = Alignment.Center
                             ){
                                 Loading()
@@ -132,7 +135,7 @@ fun TaskDetail(
 
 @Composable
 fun MyTopAppBar(navHostController: NavHostController) {
-    TopAppBar(title = { Text(text = "Task Detail") },
+    TopAppBar(title = { Text(text = stringResource(id = R.string.taskDetail)) },
         navigationIcon = {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -196,10 +199,10 @@ fun DialogTaskAdd(
 
         ) {
 
-            TextFieldComp(labelField = "Nombre de la tarea", name) { name = it }
+            TextFieldComp(labelField = stringResource(id = R.string.taskName), name) { name = it }
 
             TextFieldComp(
-                "Descripción",
+                stringResource(id = R.string.description),
                 height = 120.dp,
                 maxLin = 5,
                 singleL = false,
@@ -221,7 +224,7 @@ fun DialogTaskAdd(
 
             DateFieldComp(dateToString)
 
-            TonalButton(title = " Elegir Fecha ") {
+            TonalButton(title = " ${stringResource(id = R.string.chooseDate)} ") {
                 closeDate()
             }
 
@@ -235,7 +238,7 @@ fun DialogTaskAdd(
                         onDismissRequest = {},
                         confirmButton = {
                             TextButton(onClick = { closeDate() }) {
-                                Text(text = "Aceptar")
+                                Text(text = stringResource(id = R.string.acceptButton))
                             }
                         }) {
                         DatePicker(state = dateState)
@@ -247,7 +250,7 @@ fun DialogTaskAdd(
             /////////
 
             TextFieldComp(
-                labelField = "Entregables",
+                labelField = stringResource(id = R.string.deliverables),
                 maxLin = 4,
                 height = 100.dp,
                 singleL = false,
@@ -258,7 +261,7 @@ fun DialogTaskAdd(
 
 
             TonalButton(
-                title = "Actualizar",
+                title = stringResource(id = R.string.updateButton),
                 modifier = Modifier,
                 color = ButtonDefaults.buttonColors(containerColor = Color(0xFF6E56FD))
             )

@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,13 +90,13 @@ fun LoginScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextFieldComp(labelField = "Correo electrónico",email) { email = it }
-            TextFieldComp(labelField = "Contraseña",password) { password = it }
+            TextFieldComp(labelField = stringResource(id = R.string.email), email) { email = it }
+            TextFieldComp(labelField = stringResource(id = R.string.password), password) { password = it }
             TextButton(onClick = {
                 navHostController.navigate("resetPasswordScreen")
             }) {
                 Text(
-                    text = "¿Has olvidado tu contraseña?",
+                    text = stringResource(id = R.string.forgotYourPassword),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold,
@@ -111,13 +112,13 @@ fun LoginScreen(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TonalButton(title = "Ingresar") { viewModel.loginUser(email.lowercase(), password) }
+            TonalButton(title = stringResource(id = R.string.enterButton)) { viewModel.loginUser(email.lowercase(), password) }
 
             TextButton(onClick = {
                 navHostController.navigate("registerScreen")
             }) {
                 Text(
-                    text = "¿No tienes una cuenta?",
+                    text = stringResource(id = R.string.dontHaveAnAccount),
                     fontSize = 20.sp,
                     color = Color.White,
                     fontWeight = FontWeight.SemiBold
@@ -133,32 +134,35 @@ fun LoginScreen(
 
             LoginState.Initial -> {}
             LoginState.Loading -> {
-                Box(modifier = Modifier.clip(CircleShape)
-                    .constrainAs(loading) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    },
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .constrainAs(loading) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        },
                 ) {
                     Loading()
                 }
             }
 
             is LoginState.Success -> {
-                successFun(context, viewModel, navHostController, currentSate.user)
+                SuccessFun(context, viewModel, navHostController, currentSate.user)
             }
         }
     }
 }
 
-fun successFun(
+@Composable
+fun SuccessFun(
     context: Context,
     viewModel: LoginViewModel,
     navHostController: NavHostController,
     user: UserM
 ) {
-    Toast.makeText(context, "Bienvenido", Toast.LENGTH_SHORT).show()
+    Toast.makeText(context, stringResource(id = R.string.welcome), Toast.LENGTH_SHORT).show()
 
     navHostController.navigate("mainTaskScreen/${user.email}")
 
