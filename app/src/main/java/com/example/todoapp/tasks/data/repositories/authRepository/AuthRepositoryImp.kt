@@ -43,7 +43,7 @@ class AuthRepositoryImp @Inject constructor(
             }
         }.getOrElse {
             println(it.message)
-            CreateUserResult.Error("${resourceProvider.getString(R.string.login_user_error_login_failed)} ${it.message}")
+            CreateUserResult.Error(it.message ?: "")
         }
     }
 

@@ -27,9 +27,6 @@ class ResetPasswordViewModelTest{
     @Mock
     lateinit var repositoryImp: AuthRepositoryImp
 
-    @Mock
-    lateinit var resourceProvider: ResourceProvider
-
     private lateinit var viewModel: ResetPasswordViewModel
 
     private val email = "juan132y@gmail.com"
@@ -37,7 +34,7 @@ class ResetPasswordViewModelTest{
     @Before
     fun setUp(){
         MockitoAnnotations.openMocks(this)
-        viewModel = ResetPasswordViewModel(repositoryImp,resourceProvider)
+        viewModel = ResetPasswordViewModel(repositoryImp)
     }
 
     @Test
