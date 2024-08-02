@@ -63,4 +63,40 @@
 
     <string name="responseWasNull">La respuesta fue nula</string>
 
+    <string name="categories_not_found">No se encontraron categorías</string>
+    <string name="category_not_found">Categoría no encontrada</string>
+    <string name="task_created_success">Se ha creado la tarea con éxito</string>
+    <string name="task_updated_success">Tarea actualizada exitosamente</string>
+    <string name="task_not_found">Tarea no encontrada</string>
+    <string name="error_getting_category">Error obteniendo categoría</string>
+    <string name="error_converting_task">Error convirtiendo tarea</string>
+    <string name="error_getting_task">Error obteniendo tarea</string>
+    <string name="task_deleted_success">Tarea eliminada con éxito</string>
+    <string name="update_failed">No se pudo actualizar la tarea</string>
+
+    Messages in AuthRepositoryImp
+
+    <!-- loginUser -->
+    <string name="login_user_success">Successfully logged in.</string>
+    <string name="login_user_error_user_not_found">User not found in the database.</string>
+    <string name="login_user_error_retrieval_failed">Error retrieving the user.</string>
+    <string name="login_user_error_login_failed">Error logging in:</string>
+
+    <!-- logOutUser -->
+    <string name="logout_success">You have logged out</string>
+
+    <!-- createUser -->
+    <string name="create_user_error_email_registered">The email is already registered</string>
+    <string name="create_user_error_creation">Error during user creation</string>
+
+    <!-- resetPassword -->
+    <string name="reset_password_success">A password reset email has been sent</string>
+    <string name="reset_password_error_email_not_exist">The entered email does not exist</string>
+
+    <!-- getUserByEmail -->
+    <string name="get_user_error_user_not_found">User not found</string>
+
+    <!-- General error messages -->
+    <string name="error_authentication">Error during authentication:</string>
+    <string name="error_verifying_email">Error verifying email:</string>
 </resources>

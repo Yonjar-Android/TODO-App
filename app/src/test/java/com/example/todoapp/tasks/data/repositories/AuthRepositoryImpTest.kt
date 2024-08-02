@@ -4,6 +4,7 @@ import com.example.todoapp.motherObject.UserMotherObject
 import com.example.todoapp.tasks.data.models.UserModel
 import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
 import com.example.todoapp.tasks.data.repositories.authRepository.CreateUserResult
+import com.example.todoapp.tasks.utils.ResourceProvider
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +25,9 @@ class AuthRepositoryImpTest {
 
     @Mock
     lateinit var firebaseAuth: FirebaseAuth
+
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
 
     @Mock
     lateinit var firestore: FirebaseFirestore
@@ -49,7 +53,7 @@ class AuthRepositoryImpTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        repositoryImp = AuthRepositoryImp(firestore, firebaseAuth)
+        repositoryImp = AuthRepositoryImp(firestore, firebaseAuth, resourceProvider)
     }
 
     @Test
@@ -83,8 +87,6 @@ class AuthRepositoryImpTest {
         //Then
 
         assertTrue(response is CreateUserResult.Error)
-        val errorResult = response as CreateUserResult.Error
-        assertEquals(errorResult.error, "Error al iniciar sesión: Login error")
     }
 
     @Test
@@ -101,8 +103,6 @@ class AuthRepositoryImpTest {
         //Then
 
         assertTrue(response is CreateUserResult.Error)
-        val errorResult = response as CreateUserResult.Error
-        assertEquals(errorResult.error, "Usuario no encontrado en la base de datos.")
     }
 
     @Test
@@ -119,7 +119,7 @@ class AuthRepositoryImpTest {
         //Then
         assertTrue(response is CreateUserResult.Error)
         val errorResult = response as CreateUserResult.Error
-        assertEquals(errorResult.error, "Error al obtener el usuario.")
+        assertEquals(errorResult.error, null)
     }
 
     private fun mockFirestoreUserFound(

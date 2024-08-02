@@ -1,10 +1,12 @@
 package com.example.todoapp.tasks.data.repositories.taskRepository
 
+import com.example.todoapp.R
 import com.example.todoapp.tasks.data.models.CategoryModel
 import com.example.todoapp.tasks.data.models.TaskModel
 import com.example.todoapp.tasks.domain.models.Category
 import com.example.todoapp.tasks.domain.models.TaskDom
 import com.example.todoapp.tasks.domain.repositories.TasksRepository
+import com.example.todoapp.tasks.utils.ResourceProvider
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -15,7 +17,8 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 
 class TasksRepositoryImp @Inject constructor(
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val resourceProvider: ResourceProvider
 ) : TasksRepository {
 
     override suspend fun getAllCategories(): CategoryResult {
@@ -24,7 +27,7 @@ class TasksRepositoryImp @Inject constructor(
             firestore.collection("Categorias").get()
                 .addOnSuccessListener { querySnapshot ->
                     if (querySnapshot.isEmpty) {
-                        continuation.resume(CategoryResult.Error("No se encontraron categorías"))
+                        continuation.resume(CategoryResult.Error(resourceProvider.getString(R.string.categories_not_found)))
                     } else {
                         println(convertCategories(querySnapshot.documents))
                         continuation.resume(CategoryResult.Success(convertCategories(querySnapshot.documents)))
@@ -42,7 +45,7 @@ class TasksRepositoryImp @Inject constructor(
                 .get()
                 .addOnSuccessListener { querySnapshot ->
                     if (querySnapshot.isEmpty) {
-                        continuation.resume(TaskResult.Error("Categoria no encontrada"))
+                        continuation.resume(TaskResult.Error(resourceProvider.getString(R.string.category_not_found)))
                     } else {
                         continuation.resume(
                             TaskResult.Success(
@@ -87,7 +90,7 @@ class TasksRepositoryImp @Inject constructor(
 
                 documentReference.set((task.copy(taskId = documentReference.id)))
                 .addOnSuccessListener {
-                    continuation.resume(TaskResult.Success("Se ha creado la tarea con éxito"))
+                    continuation.resume(TaskResult.Success(resourceProvider.getString(R.string.task_created_success)))
                 }.addOnFailureListener {
                     println("Error: ${it.message}")
                     continuation.resume(TaskResult.Error(it.message ?: ""))
@@ -125,10 +128,10 @@ class TasksRepositoryImp @Inject constructor(
 
             taskDocumentRef.update(updates)
                 .addOnSuccessListener {
-                    continuation.resume(TaskResult.Success("Tarea actualizada exitosamente"))
+                    continuation.resume(TaskResult.Success(resourceProvider.getString(R.string.task_updated_success)))
                 }
                 .addOnFailureListener { e ->
-                    continuation.resume(TaskResult.Error(e.message ?: "Error actualizando tarea"))
+                    continuation.resume(TaskResult.Error(e.message ?: ""))
                 }
 
         }
@@ -169,7 +172,7 @@ class TasksRepositoryImp @Inject constructor(
                 .whereEqualTo("taskId", taskId).get()
                 .addOnSuccessListener { querySnapshot ->
                     if (querySnapshot.isEmpty) {
-                        continuation.resume(TaskDetailResult.Error("Tarea no encontrada"))
+                        continuation.resume(TaskDetailResult.Error(resourceProvider.getString(R.string.task_not_found)))
                     } else {
                         val taskModel = querySnapshot.documents[0].toObject(TaskModel::class.java)
                         if (taskModel != null) {
@@ -180,17 +183,17 @@ class TasksRepositoryImp @Inject constructor(
                                         val categoryName = categoryDocument.getString("name")
                                         continuation.resume(TaskDetailResult.Success(taskModel.toTask(), categoryName ?: "Categoría desconocida"))
                                     } else {
-                                        continuation.resume(TaskDetailResult.Error("Categoría no encontrada"))
+                                        continuation.resume(TaskDetailResult.Error(resourceProvider.getString(R.string.category_not_found)))
                                     }
                                 }?.addOnFailureListener {
-                                    continuation.resume(TaskDetailResult.Error(it.message ?: "Error obteniendo categoría"))
+                                    continuation.resume(TaskDetailResult.Error(it.message ?: resourceProvider.getString(R.string.error_getting_category)))
                                 }
                         } else {
-                            continuation.resume(TaskDetailResult.Error("Error convirtiendo tarea"))
+                            continuation.resume(TaskDetailResult.Error(resourceProvider.getString(R.string.error_converting_task)))
                         }
                     }
                 }.addOnFailureListener {
-                    continuation.resume(TaskDetailResult.Error(it.message ?: "Error obteniendo tarea"))
+                    continuation.resume(TaskDetailResult.Error(it.message ?: resourceProvider.getString(R.string.error_getting_task)))
                 }
         }
     }
@@ -199,7 +202,7 @@ class TasksRepositoryImp @Inject constructor(
         return suspendCancellableCoroutine { continuation ->
             firestore.collection("Tareas").document(taskId).delete()
                 .addOnSuccessListener {
-                    continuation.resume(TaskResult.Success("Task deleted successfully"))
+                    continuation.resume(TaskResult.Success(resourceProvider.getString(R.string.task_deleted_success)))
                 }
                 .addOnFailureListener { exception ->
                     continuation.resume(TaskResult.Error(exception.message ?: ""))
@@ -215,7 +218,7 @@ class TasksRepositoryImp @Inject constructor(
                     continuation.resume(TaskResult.Success("Se actualizo"))
                 }
                 .addOnFailureListener { e ->
-                    continuation.resume(TaskResult.Error(e.message ?: "No se pudo actualizar la tarea"))
+                    continuation.resume(TaskResult.Error(e.message ?: resourceProvider.getString(R.string.update_failed)))
                 }
         }
     }

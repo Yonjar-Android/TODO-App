@@ -1,8 +1,10 @@
 package com.example.todoapp.tasks.data.repositories.authRepository
 
+import com.example.todoapp.R
 import com.example.todoapp.tasks.data.models.UserModel
 import com.example.todoapp.tasks.domain.models.UserM
 import com.example.todoapp.tasks.domain.repositories.UserAuthRepository
+import com.example.todoapp.tasks.utils.ResourceProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,7 +21,8 @@ import kotlin.coroutines.resume
 
 class AuthRepositoryImp @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val resourceProvider: ResourceProvider
 ) : UserAuthRepository {
 
     override suspend fun loginUser(email: String, password: String): CreateUserResult {
@@ -30,26 +33,26 @@ class AuthRepositoryImp @Inject constructor(
                 .get()
                 .await()
             if (userSnapshot.isEmpty) {
-                CreateUserResult.Error("Usuario no encontrado en la base de datos.")
+                CreateUserResult.Error(resourceProvider.getString(R.string.login_user_error_user_not_found))
             } else {
                 // Itera sobre los documentos y convierte cada uno a UserModel
                 val user = userSnapshot.documents[0].toObject(UserModel::class.java)
                 if (user != null) {
                     CreateUserResult.Success(user.toUser()) // Devuelve el primer usuario encontrado
                 } else {
-                    CreateUserResult.Error("Error al obtener el usuario.")
+                    CreateUserResult.Error(resourceProvider.getString(R.string.login_user_error_retrieval_failed))
                 }
             }
         }.getOrElse {
             println(it.message)
-            CreateUserResult.Error("Error al iniciar sesión: ${it.message}")
+            CreateUserResult.Error("${resourceProvider.getString(R.string.login_user_error_login_failed)} ${it.message}")
         }
     }
 
     override suspend fun logOutUser(): ResetResult {
        return try {
            firebaseAuth.signOut()
-           ResetResult.Success("Has cerrado sesión")
+           ResetResult.Success(resourceProvider.getString(R.string.logout_success))
        } catch (e: Exception){
            ResetResult.Error(e.message ?: "")
        }
@@ -62,7 +65,7 @@ class AuthRepositoryImp @Inject constructor(
     ): CreateUserResult {
 
         if (checkEmailExists(email)) {
-            return CreateUserResult.Error("El correo ya está registrado")
+            return CreateUserResult.Error(resourceProvider.getString(R.string.create_user_error_email_registered))
         }
 
         val user = UserModel(
@@ -97,7 +100,7 @@ class AuthRepositoryImp @Inject constructor(
                     }
                 }
                 .addOnFailureListener {
-                    println("Error al verificar el correo: ${it.message}")
+                    println("${resourceProvider.getString(R.string.error_verifying_email)} ${it.message}")
                     continuation.resume(CreateUserResult.Error(it.message))
                 }
         }
@@ -107,9 +110,9 @@ class AuthRepositoryImp @Inject constructor(
         return try {
             if (checkEmailExists(email)){
                 firebaseAuth.sendPasswordResetEmail(email)
-                ResetResult.Success("Se le ha enviado un email para restablecer su contraseña")
+                ResetResult.Success(resourceProvider.getString(R.string.reset_password_success))
             } else{
-                ResetResult.Error("El correo ingresado no existe")
+                ResetResult.Error(resourceProvider.getString(R.string.reset_password_error_email_not_exist))
             }
         } catch (e: Exception) {
             ResetResult.Error(e.message ?: "")// Error message with exception details
@@ -121,7 +124,7 @@ class AuthRepositoryImp @Inject constructor(
             firestore.collection("Usuarios").whereEqualTo("email",email).get()
                 .addOnSuccessListener { querySnapShot ->
                     if (querySnapShot.isEmpty){
-                        continuation.resume(UserResult.Error("No se encontró el usuario"))
+                        continuation.resume(UserResult.Error(resourceProvider.getString(R.string.get_user_error_user_not_found)))
                     } else{
                         continuation.resume(UserResult.Success(convertToUser(querySnapShot)))
                     }
@@ -140,7 +143,7 @@ class AuthRepositoryImp @Inject constructor(
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             true
         }.getOrElse {
-            println("Error during authentication: ${it.message}")
+            println("${resourceProvider.getString(R.string.error_authentication)} ${it.message}")
             false
         }
     }
@@ -154,7 +157,7 @@ class AuthRepositoryImp @Inject constructor(
                     continuation.resume(!querySnapshot.isEmpty)
                 }
                 .addOnFailureListener {
-                    println("Error al verificar el correo: ${it.message}")
+                    println("${resourceProvider.getString(R.string.error_verifying_email)} ${it.message}")
                     continuation.resume(false)
                 }
         }

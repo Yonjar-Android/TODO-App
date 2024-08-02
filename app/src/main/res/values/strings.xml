@@ -67,4 +67,43 @@
 
     <string name="responseWasNull">Response was null</string>
 
+    Messages in taskRepositoryImp
+
+    <string name="categories_not_found">No categories found</string>
+    <string name="category_not_found">Category not found</string>
+    <string name="task_created_success">Task created successfully</string>
+    <string name="task_updated_success">Task updated successfully</string>
+    <string name="task_not_found">Task not found</string>
+    <string name="error_getting_category">Error getting category</string>
+    <string name="error_converting_task">Error converting task</string>
+    <string name="error_getting_task">Error getting task</string>
+    <string name="task_deleted_success">Task deleted successfully</string>
+    <string name="update_failed">Failed to update task</string>
+
+    Messages in AuthRepositoryImp
+
+    <!-- loginUser -->
+    <string name="login_user_success">Se ha iniciado sesión correctamente.</string>
+    <string name="login_user_error_user_not_found">Usuario no encontrado en la base de datos.</string>
+    <string name="login_user_error_retrieval_failed">Error al obtener el usuario.</string>
+    <string name="login_user_error_login_failed">Error al iniciar sesión:</string>
+
+    <!-- logOutUser -->
+    <string name="logout_success">Has cerrado sesión</string>
+
+    <!-- createUser -->
+    <string name="create_user_error_email_registered">El correo ya está registrado</string>
+    <string name="create_user_error_creation">Error durante la creación del usuario</string>
+
+    <!-- resetPassword -->
+    <string name="reset_password_success">Se le ha enviado un email para restablecer su contraseña</string>
+    <string name="reset_password_error_email_not_exist">El correo ingresado no existe</string>
+
+    <!-- getUserByEmail -->
+    <string name="get_user_error_user_not_found">No se encontró el usuario</string>
+
+    <!-- General error messages -->
+    <string name="error_authentication">Error durante la autenticación:</string>
+    <string name="error_verifying_email">Error al verificar el correo:</string>
+
 </resources>
