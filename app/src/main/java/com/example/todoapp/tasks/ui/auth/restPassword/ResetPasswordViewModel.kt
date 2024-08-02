@@ -14,7 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
     private val repositoryImp: AuthRepositoryImp,
-    private val resourceProvider: ResourceProvider
 ) :
     ViewModel() {
 
@@ -26,10 +25,11 @@ class ResetPasswordViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                when(val response = repositoryImp.resetPassword(email)){
+                when (val response = repositoryImp.resetPassword(email)) {
                     is ResetResult.Error -> {
                         _state.value = ResetPasswordState.Error("Error: ${response.error}")
                     }
+
                     is ResetResult.Success -> {
                         _state.value = ResetPasswordState.Success(response.message)
                     }

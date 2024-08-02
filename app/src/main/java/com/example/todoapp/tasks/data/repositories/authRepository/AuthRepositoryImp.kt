@@ -6,10 +6,8 @@ import com.example.todoapp.tasks.domain.models.UserM
 import com.example.todoapp.tasks.domain.repositories.UserAuthRepository
 import com.example.todoapp.tasks.utils.ResourceProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

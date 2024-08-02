@@ -46,7 +46,6 @@ class AuthRepositoryImpTest {
 
     private lateinit var repositoryImp: AuthRepositoryImp
 
-    private val name = "Juan Centeno"
     private val email = "juancenteno132777@gmail.com"
     private val password = "12345678"
 

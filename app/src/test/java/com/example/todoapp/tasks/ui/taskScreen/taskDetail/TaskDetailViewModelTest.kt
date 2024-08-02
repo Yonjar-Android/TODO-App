@@ -7,7 +7,6 @@ import com.example.todoapp.tasks.data.repositories.taskRepository.TaskDetailResu
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
 import com.example.todoapp.tasks.domain.models.TaskDom
-import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenState
 import com.example.todoapp.tasks.utils.ResourceProvider
 import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,7 +15,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
