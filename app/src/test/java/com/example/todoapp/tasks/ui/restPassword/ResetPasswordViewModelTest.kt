@@ -6,6 +6,7 @@ import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepository
 import com.example.todoapp.tasks.data.repositories.authRepository.ResetResult
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordState
 import com.example.todoapp.tasks.ui.auth.restPassword.ResetPasswordViewModel
+import com.example.todoapp.tasks.utils.ResourceProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -26,6 +27,9 @@ class ResetPasswordViewModelTest{
     @Mock
     lateinit var repositoryImp: AuthRepositoryImp
 
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
     private lateinit var viewModel: ResetPasswordViewModel
 
     private val email = "juan132y@gmail.com"
@@ -33,7 +37,7 @@ class ResetPasswordViewModelTest{
     @Before
     fun setUp(){
         MockitoAnnotations.openMocks(this)
-        viewModel = ResetPasswordViewModel(repositoryImp)
+        viewModel = ResetPasswordViewModel(repositoryImp,resourceProvider)
     }
 
     @Test

@@ -6,6 +6,7 @@ import com.example.todoapp.motherObject.UserMotherObject
 import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
 import com.example.todoapp.tasks.ui.auth.register.RegisterState
 import com.example.todoapp.tasks.ui.auth.register.RegisterViewModel
+import com.example.todoapp.tasks.utils.ResourceProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -26,6 +27,9 @@ class RegisterViewModelTest {
     @Mock
     lateinit var repositoryImpTest: AuthRepositoryImp
 
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
     private lateinit var viewModel: RegisterViewModel
 
     private val name: String = "Juan Centeno"
@@ -36,7 +40,7 @@ class RegisterViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        viewModel = RegisterViewModel(repositoryImpTest)
+        viewModel = RegisterViewModel(repositoryImpTest,resourceProvider)
     }
 
     @Test
@@ -80,7 +84,7 @@ class RegisterViewModelTest {
                 val state = awaitItem()
                 assertTrue(state is RegisterState.Error)
                 val errorState = state as RegisterState.Error
-                assertEquals(errorState.error, "Response was null")
+                assertEquals(errorState.error, UserMotherObject.createErrorNullUserResult.error)
             }
         }
 

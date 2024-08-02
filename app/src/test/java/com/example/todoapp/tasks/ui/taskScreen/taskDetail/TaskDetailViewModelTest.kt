@@ -8,6 +8,7 @@ import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
 import com.example.todoapp.tasks.domain.models.TaskDom
 import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenState
+import com.example.todoapp.tasks.utils.ResourceProvider
 import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -30,6 +31,9 @@ class TaskDetailViewModelTest {
     @Mock
     lateinit var repositoryImp: TasksRepositoryImp
 
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
     private lateinit var taskDetailViewModel: TaskDetailViewModel
 
     @Mock
@@ -51,7 +55,7 @@ class TaskDetailViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        taskDetailViewModel = TaskDetailViewModel(repositoryImp)
+        taskDetailViewModel = TaskDetailViewModel(repositoryImp,resourceProvider)
 
 
         val task = TaskDom(

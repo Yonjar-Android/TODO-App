@@ -6,6 +6,7 @@ import com.example.todoapp.motherObject.UserMotherObject
 import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
 import com.example.todoapp.tasks.ui.auth.login.LoginState
 import com.example.todoapp.tasks.ui.auth.login.LoginViewModel
+import com.example.todoapp.tasks.utils.ResourceProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -26,6 +27,9 @@ class LoginViewModelTest {
     @Mock
     lateinit var repositoryImpTest: AuthRepositoryImp
 
+    @Mock
+    lateinit var resourceProvider: ResourceProvider
+
     private lateinit var viewModel: LoginViewModel
 
     private val email: String = "juancenteno132777@gmail.com"
@@ -34,7 +38,7 @@ class LoginViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        viewModel = LoginViewModel(repositoryImpTest)
+        viewModel = LoginViewModel(repositoryImpTest,resourceProvider)
     }
 
     @Test
