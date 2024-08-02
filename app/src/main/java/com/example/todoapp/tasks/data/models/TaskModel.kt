@@ -5,17 +5,18 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.PropertyName
 
 data class TaskModel(
-    @PropertyName("taskId") val taskId:String = "",
-    @PropertyName("name") val name:String = "",
-    @PropertyName("description") val description:String = "",
-    @PropertyName("date") val date:String = "",
-    @PropertyName("check") val check:Boolean = false,
-    @PropertyName("deliverablesDescription") val deliverablesDesc:String = "",
-    @PropertyName("deliverables") val deliverables:List<String> = listOf(),
-    @PropertyName("usersAssigned") val users:List<String> = listOf(),
-    @PropertyName("category") val category:DocumentReference? = null
-){
-    fun toTask():TaskDom{
+    @PropertyName("taskId") val taskId: String = "",
+    @PropertyName("name") val name: String = "",
+    @PropertyName("description") val description: String = "",
+    @PropertyName("date") val date: String = "",
+    @PropertyName("check") val check: Boolean = false,
+    @PropertyName("deliverablesDescription") val deliverablesDesc: String = "",
+    @PropertyName("deliverables") val deliverables: List<String> = listOf(),
+    @PropertyName("usersAssigned") val users: List<String> = listOf(),
+    @PropertyName("category") val category: DocumentReference? = null,
+    @PropertyName("creationDate") val creationDate: String = "" // Nuevo atributo
+) {
+    fun toTask(): TaskDom {
         return TaskDom(
             taskId = taskId,
             name = name,
@@ -25,7 +26,8 @@ data class TaskModel(
             deliverablesDesc = deliverablesDesc,
             deliverables = deliverables,
             users = users,
-            category = category
+            category = category,
+            creationDate = creationDate // Asegúrate de pasar el nuevo atributo
         )
     }
 }

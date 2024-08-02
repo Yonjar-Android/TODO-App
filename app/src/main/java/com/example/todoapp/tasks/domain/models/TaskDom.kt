@@ -11,5 +11,6 @@ data class TaskDom(
     val users:List<String>,
     val deliverables:List<String>,
     val deliverablesDesc:String,
-    val category:DocumentReference?
+    val category:DocumentReference?,
+    val creationDate:String
 )

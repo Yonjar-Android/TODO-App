@@ -69,7 +69,8 @@ class TaskScreenViewModel @Inject constructor(
         deliverablesDescription: String?,
         deliverables: List<String> = listOf(),
         users: List<String> = listOf(),
-        category: String
+        category: String,
+        creationDate:String
     ) {
         _state.value = TaskScreenState.Loading
 
@@ -94,7 +95,8 @@ class TaskScreenViewModel @Inject constructor(
                                 deliverables = deliverables,
                                 deliverablesDescription = deliverablesDescription,
                                 users = users,
-                                category = categoryReference.documentReference!!
+                                category = categoryReference.documentReference!!,
+                                creationDate = creationDate
                             )
 
                         when (response) {

@@ -47,6 +47,7 @@ class TaskScreenViewModelTest {
     private val taskId = "abc123"
     private val taskName = "Create the database"
     private val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    private val dateNow:String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
     private val error = "Error: An error has occurred"
     private val errorException = "An error has occurred"
@@ -135,7 +136,8 @@ class TaskScreenViewModelTest {
                     deliverablesDescription = "",
                     users = listOf(),
                     category = categoryMock,
-                    date = date
+                    date = date,
+                    creationDate = dateNow
                 )
             ).thenReturn(TaskMotherObject.TaskResultSuccess)
 
@@ -147,7 +149,8 @@ class TaskScreenViewModelTest {
                 deliverablesDescription = "",
                 users = listOf(),
                 category = category,
-                date = date
+                date = date,
+                creationDate = dateNow
             )
 
             //Then
@@ -175,7 +178,8 @@ class TaskScreenViewModelTest {
                 deliverablesDescription = "",
                 users = listOf(),
                 category = categoryMock,
-                date = date
+                date = date,
+                creationDate = dateNow
             )
         ).thenReturn(TaskMotherObject.TaskResultSuccess)
 
@@ -187,7 +191,8 @@ class TaskScreenViewModelTest {
             deliverablesDescription = "",
             users = listOf(),
             category = category,
-            date = date
+            date = date,
+            creationDate = dateNow
         )
         //When
 
@@ -217,7 +222,8 @@ class TaskScreenViewModelTest {
                 deliverablesDescription = "",
                 users = listOf(),
                 category = categoryMock,
-                date = date
+                date = date,
+                creationDate = dateNow
             )
         ).thenReturn(TaskMotherObject.TaskResultError)
 
@@ -229,7 +235,8 @@ class TaskScreenViewModelTest {
             deliverablesDescription = "",
             users = listOf(),
             category = category,
-            date = date
+            date = date,
+            creationDate = dateNow
         )
 
         //Then
@@ -258,7 +265,8 @@ class TaskScreenViewModelTest {
                 deliverablesDescription = "",
                 users = listOf(),
                 category = categoryMock,
-                date = date
+                date = date,
+                creationDate = dateNow
             )
         ).thenThrow(RuntimeException(errorException))
 
@@ -270,7 +278,8 @@ class TaskScreenViewModelTest {
             deliverablesDescription = "",
             users = listOf(),
             category = category,
-            date = date
+            date = date,
+            creationDate = dateNow
         )
 
         //Then
@@ -296,7 +305,8 @@ class TaskScreenViewModelTest {
                 users = listOf(),
                 check = false,
                 category = categoryMock,
-                date = date
+                date = date,
+                creationDate = dateNow
             )
         )
 

@@ -43,6 +43,7 @@ class TaskDetailViewModelTest {
     private val taskId = "myTaskId123"
     private val taskName = "Create the database"
     private val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    private val dateNow:String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
     private val category: String = "documents"
 
     private lateinit var taskDetailResultSuccess: TaskDetailResult
@@ -67,7 +68,8 @@ class TaskDetailViewModelTest {
             users = listOf(),
             check = false,
             category = categoryMock,
-            date = date
+            date = date,
+            creationDate = dateNow
         )
 
         taskDetailResultSuccess = TaskDetailResult.Success(

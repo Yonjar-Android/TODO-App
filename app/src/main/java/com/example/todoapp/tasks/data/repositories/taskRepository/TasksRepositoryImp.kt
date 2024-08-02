@@ -67,7 +67,8 @@ class TasksRepositoryImp @Inject constructor(
         deliverablesDescription: String?,
         deliverables: List<String>,
         users: List<String>,
-        category: DocumentReference
+        category: DocumentReference,
+        creationDate: String
     ): TaskResult {
 
         val task = TaskModel(
@@ -78,7 +79,8 @@ class TasksRepositoryImp @Inject constructor(
             users = users,
             deliverablesDesc = deliverablesDescription ?: "",
             deliverables = deliverables,
-            category = category
+            category = category,
+            creationDate = creationDate
         )
 
         return suspendCancellableCoroutine { continuation ->

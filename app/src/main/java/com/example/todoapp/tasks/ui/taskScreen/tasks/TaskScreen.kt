@@ -78,6 +78,8 @@ import com.example.todoapp.tasks.ui.Loading
 import com.example.todoapp.tasks.ui.TextFieldComp
 import com.example.todoapp.tasks.ui.TonalButton
 import com.example.todoapp.tasks.ui.errorFun
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -391,7 +393,8 @@ fun DialogTaskAdd(
                     deliverables = listOf(),
                     deliverablesDescription = entregables,
                     users = listOf(),
-                    category = category
+                    category = category,
+                    creationDate = getCurrentDate()
                 )
             }
         }
@@ -583,6 +586,12 @@ fun DialogDelete(task: TaskDom, viewModel: TaskScreenViewModel, close: () -> Uni
         text = {
             Text(text = stringResource(id = R.string.wannaDeleteTask, task.name))
         })
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getCurrentDate(): String {
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    return LocalDate.now().format(formatter)
 }
 
 

@@ -18,7 +18,8 @@ interface TasksRepository {
         deliverablesDescription:String?,
         deliverables:List<String> = listOf(),
         users:List<String> = listOf(),
-        category:DocumentReference
+        category:DocumentReference,
+        creationDate:String
     ): TaskResult
 
     suspend fun updateTask(
