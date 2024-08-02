@@ -46,4 +46,21 @@
     <string name="logOut">Cerrar Sesión</string>
     <string name="cancelButton">Cancelar</string>
     <string name="logOutAccount">¿Deseas salir de tu cuenta actual?</string>
+
+
+    <string name="fillOutFields">Rellene los campos</string>
+    <string name="password_empty">Rellene los campos de contraseña</string>
+    <string name="password_length">La contraseña debe contener al menos 8 caracteres</string>
+    <string name="password_mismatch">Las contraseñas no coinciden</string>
+    <string name="name_empty">Rellene el campo nombre</string>
+    <string name="email_empty">Rellene el campo correo electrónico</string>
+    <string name="email_invalid">El correo ingresado no es válido</string>
+    <string name="category_empty">Seleccione una categoría</string>
+    <string name="date_empty">Seleccione una fecha</string>
+    <string name="date_past">No puede seleccionar una fecha anterior a hoy</string>
+
+    Error messages
+
+    <string name="responseWasNull">La respuesta fue nula</string>
+
 </resources>

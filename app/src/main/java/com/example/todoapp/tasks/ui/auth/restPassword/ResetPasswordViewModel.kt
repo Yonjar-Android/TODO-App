@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
 import com.example.todoapp.tasks.data.repositories.authRepository.ResetResult
+import com.example.todoapp.tasks.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(
-    private val repositoryImp: AuthRepositoryImp
+    private val repositoryImp: AuthRepositoryImp,
+    private val resourceProvider: ResourceProvider
 ) :
     ViewModel() {
 

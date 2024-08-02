@@ -48,4 +48,23 @@
     <string name="cancelButton">Cancel</string>
     <string name="logOutAccount">Would you like to log out?</string>
 
+    Success Messages
+
+    Validation messages
+
+    <string name="fillOutFields">Fill out the fields</string>
+    <string name="password_empty">Fill in the password fields</string>
+    <string name="password_length">The password must be at least 8 characters long</string>
+    <string name="password_mismatch">Passwords do not match</string>
+    <string name="name_empty">Fill in the name field</string>
+    <string name="email_empty">Fill in the email field</string>
+    <string name="email_invalid">The entered email is not valid</string>
+    <string name="category_empty">Please select a category</string>
+    <string name="date_empty">Please select a date</string>
+    <string name="date_past">You cannot select a date before today</string>
+
+    Error messages
+
+    <string name="responseWasNull">Response was null</string>
+
 </resources>

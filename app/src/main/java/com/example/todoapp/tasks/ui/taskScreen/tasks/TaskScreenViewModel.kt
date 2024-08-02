@@ -4,11 +4,13 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todoapp.R
 import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
 import com.example.todoapp.tasks.domain.models.Category
 import com.example.todoapp.tasks.domain.models.TaskDom
+import com.example.todoapp.tasks.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TaskScreenViewModel @Inject constructor(
-    private val repositoryImp: TasksRepositoryImp
+    private val repositoryImp: TasksRepositoryImp,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
     private val _state = MutableStateFlow<TaskScreenState>(TaskScreenState.Initial)
     var state: StateFlow<TaskScreenState> = _state
@@ -116,15 +119,15 @@ class TaskScreenViewModel @Inject constructor(
     private fun validations(name: String, date: String, category: String): Boolean {
         _showToast.value = true
         if (name.isBlank()) {
-            _state.value = TaskScreenState.Error("Rellene el campo nombre")
+            _state.value = TaskScreenState.Error(resourceProvider.getString(R.string.name_empty))
             return false
         }
         if (category.isBlank()) {
-            _state.value = TaskScreenState.Error("Seleccione una categoría")
+            _state.value = TaskScreenState.Error(resourceProvider.getString(R.string.category_empty))
             return false
         }
         if (date.isBlank()) {
-            _state.value = TaskScreenState.Error("Seleccione una fecha")
+            _state.value = TaskScreenState.Error(resourceProvider.getString(R.string.date_empty))
             return false
         }
 
@@ -135,7 +138,7 @@ class TaskScreenViewModel @Inject constructor(
         val dateSelected = LocalDate.parse(date, formatter)
 
         if (dateSelected.isBefore(today)) {
-            _state.value = TaskScreenState.Error("No puede seleccionar una fecha anterior a hoy")
+            _state.value = TaskScreenState.Error(resourceProvider.getString(R.string.date_past))
             return false
         }
 

@@ -2,8 +2,10 @@ package com.example.todoapp.tasks.ui.auth.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todoapp.R
 import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
 import com.example.todoapp.tasks.data.repositories.authRepository.CreateUserResult
+import com.example.todoapp.tasks.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val repositoryImp: AuthRepositoryImp) :
+class RegisterViewModel @Inject constructor(
+    private val repositoryImp: AuthRepositoryImp,
+    private val resourceProvider: ResourceProvider) :
     ViewModel() {
 
     private val _state = MutableStateFlow<RegisterState>(RegisterState.Initial)
@@ -28,7 +32,7 @@ class RegisterViewModel @Inject constructor(private val repositoryImp: AuthRepos
                     when(val response = repositoryImp.createUser(name, email, password)){
                         is CreateUserResult.Error -> {
                             if (response.error == null){
-                                _state.value = RegisterState.Error("Response was null")
+                                _state.value = RegisterState.Error(resourceProvider.getString(R.string.responseWasNull))
                             } else{
                                 _state.value = RegisterState.Error("Error: ${response.error}")
                             }
@@ -51,17 +55,17 @@ class RegisterViewModel @Inject constructor(private val repositoryImp: AuthRepos
 
     private fun passwordValidations(password: String, password2: String): Boolean {
         if (password == "" || password2 == "") {
-            _state.value = RegisterState.Error("Rellene los campos de contraseña")
+            _state.value = RegisterState.Error(resourceProvider.getString(R.string.password_empty))
             return false
         }
 
         if (password.length < 8) {
-            _state.value = RegisterState.Error("La contraseña debe contener almenos 8 caracteres")
+            _state.value = RegisterState.Error(resourceProvider.getString(R.string.password_length))
             return false
         }
 
         if (password != password2) {
-            _state.value = RegisterState.Error("Las contraseñas no coinciden")
+            _state.value = RegisterState.Error(resourceProvider.getString(R.string.password_mismatch))
             return false
         }
         return true
@@ -72,17 +76,17 @@ class RegisterViewModel @Inject constructor(private val repositoryImp: AuthRepos
         val emailRegex = Regex("^([a-zA-Z0-9_.-]+)@([\\da-zA-Z.-]+)\\.([a-zA-Z.]{2,6})$")
 
         if (name == "") {
-            _state.value = RegisterState.Error("Rellene el campo nombre")
+            _state.value = RegisterState.Error(resourceProvider.getString(R.string.name_empty))
             return false
         }
 
         if (email == "") {
-            _state.value = RegisterState.Error("Rellene el campo correo electrónico")
+            _state.value = RegisterState.Error(resourceProvider.getString(R.string.email_empty))
             return false
         }
 
         if (!emailRegex.matches(email)) {
-            _state.value = RegisterState.Error("El correo ingresado no es válido")
+            _state.value = RegisterState.Error(resourceProvider.getString(R.string.email_invalid))
             return false
         }
 

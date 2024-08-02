@@ -4,12 +4,14 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todoapp.R
 import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskDetailResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
 import com.example.todoapp.tasks.domain.models.Category
 import com.example.todoapp.tasks.domain.models.TaskDom
+import com.example.todoapp.tasks.utils.ResourceProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +21,10 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
-class TaskDetailViewModel @Inject constructor(private val repositoryImp: TasksRepositoryImp) :
+class TaskDetailViewModel @Inject constructor(
+    private val repositoryImp: TasksRepositoryImp,
+    private val resourceProvider: ResourceProvider
+    ) :
     ViewModel() {
 
     private val _state = MutableStateFlow<TaskDetailState>(TaskDetailState.Loading)
@@ -106,7 +111,7 @@ class TaskDetailViewModel @Inject constructor(private val repositoryImp: TasksRe
 
                             }
                             is TaskResult.Success -> {
-                                _state.value = TaskDetailState.Success("Se ha actualizado la tarea con éxito")
+                                _state.value = TaskDetailState.Success(response.message)
 
                             }
                         }
@@ -141,15 +146,15 @@ class TaskDetailViewModel @Inject constructor(private val repositoryImp: TasksRe
     @RequiresApi(Build.VERSION_CODES.O)
     private fun validations(name: String, date: String, category: String): Boolean {
         if (name.isBlank()) {
-            _state.value = TaskDetailState.Error("Rellene el campo nombre")
+            _state.value = TaskDetailState.Error(resourceProvider.getString(R.string.name_empty))
             return false
         }
         if (category.isBlank()) {
-            _state.value = TaskDetailState.Error("Seleccione una categoría")
+            _state.value = TaskDetailState.Error(resourceProvider.getString(R.string.category_empty))
             return false
         }
         if (date.isBlank()) {
-            _state.value = TaskDetailState.Error("Seleccione una fecha")
+            _state.value = TaskDetailState.Error(resourceProvider.getString(R.string.date_empty))
             return false
         }
 
@@ -160,7 +165,7 @@ class TaskDetailViewModel @Inject constructor(private val repositoryImp: TasksRe
         val dateSelected = LocalDate.parse(date, formatter)
 
         if (dateSelected.isBefore(today)) {
-            _state.value = TaskDetailState.Error("No puede seleccionar una fecha anterior a hoy")
+            _state.value = TaskDetailState.Error(resourceProvider.getString(R.string.date_past))
             return false
         }
 
