@@ -88,7 +88,7 @@ class TasksRepositoryImp @Inject constructor(
 
             val documentReference = firestore.collection("Tareas").document()
 
-                documentReference.set((task.copy(taskId = documentReference.id)))
+                documentReference.set((task.copy(taskId = documentReference.id, categoryId = category.id)))
                 .addOnSuccessListener {
                     continuation.resume(TaskResult.Success(resourceProvider.getString(R.string.task_created_success)))
                 }.addOnFailureListener {
@@ -123,7 +123,8 @@ class TasksRepositoryImp @Inject constructor(
                 "deliverablesDescription" to deliverablesDescription,
                 "deliverables" to deliverables,
                 "users" to users,
-                "category" to category
+                "category" to category,
+                "categoryId" to category.id
             )
 
             taskDocumentRef.update(updates)

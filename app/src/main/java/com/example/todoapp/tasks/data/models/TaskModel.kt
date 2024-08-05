@@ -14,6 +14,7 @@ data class TaskModel(
     @PropertyName("deliverables") val deliverables: List<String> = listOf(),
     @PropertyName("usersAssigned") val users: List<String> = listOf(),
     @PropertyName("category") val category: DocumentReference? = null,
+    @PropertyName("categoryId") val categoryId:String = "",
     @PropertyName("creationDate") val creationDate: String = "" // Nuevo atributo
 ) {
     fun toTask(): TaskDom {
@@ -27,6 +28,7 @@ data class TaskModel(
             deliverables = deliverables,
             users = users,
             category = category,
+            categoryId = categoryId,
             creationDate = creationDate // Asegúrate de pasar el nuevo atributo
         )
     }

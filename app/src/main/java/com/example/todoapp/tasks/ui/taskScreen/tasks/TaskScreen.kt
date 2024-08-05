@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -156,6 +157,34 @@ fun TaskScreen(
                             Text(text = stringResource(id = R.string.makeASearch))
                         }
                     ) {
+
+                        LazyRow(modifier = Modifier.fillMaxWidth()) {
+                            if (fetchedCategories.value != null) {
+                                items(fetchedCategories.value!!) { categ ->
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(16.dp)
+                                            .background(Color.White)
+                                            .clickable {
+                                                    fetchedTasks.value = viewModel.tasks?.filter  {
+                                                        it.categoryId == categ.id
+                                                    }
+                                            }
+                                    ) {
+                                        Text(
+                                            text = categ.name,
+                                            fontSize = 16.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            modifier = Modifier
+                                                .padding(8.dp)
+                                                .clip(CircleShape)
+                                        )
+                                    }
+
+                                }
+                            }
+                        }
+
                         BackgroundScreen(image = R.drawable.main_bg) {
                             LazyColumn(
                                 modifier = Modifier
