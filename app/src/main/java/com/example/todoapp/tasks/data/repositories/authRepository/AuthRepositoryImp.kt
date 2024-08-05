@@ -94,7 +94,7 @@ class AuthRepositoryImp @Inject constructor(
                                 continuation.resume(CreateUserResult.Error(it.message))
                             }
                     } else { // El correo ya existe, devuelve null o maneja el error de manera apropiada
-                        continuation.resume(CreateUserResult.Error(null))
+                        continuation.resume(CreateUserResult.Error(resourceProvider.getString(R.string.create_user_error_email_registered)))
                     }
                 }
                 .addOnFailureListener {

@@ -30,10 +30,15 @@ import com.example.todoapp.tasks.ui.taskScreen.taskDetail.TaskDetailViewModel
 import com.example.todoapp.tasks.ui.taskScreen.tasks.TaskScreenViewModel
 import com.example.todoapp.tasks.ui.user.UserScreenViewModel
 import com.example.todoapp.ui.theme.TodoAppTheme
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     private val registerViewModel: RegisterViewModel by viewModels()
 
@@ -57,76 +62,82 @@ class MainActivity : ComponentActivity() {
             TodoAppTheme {
 
                 val navController = rememberNavController()
+                val currentUser = firebaseAuth.currentUser
 
-                NavHost(navController = navController, startDestination = "logoAndButtons") {
+                val startDestination = if (currentUser != null) {
+                    "mainTaskScreen/${currentUser.email}"
+                } else {
+                    "logoAndButtons"
+                }
 
-                    composable("logoAndButtons") {
-                        BackgroundScreen(image = R.drawable.app_bg) {
-                            LogoAndButtons(
-                                navController
-                            )
-                        }
-                    }
-
-                    composable("registerScreen") {
-                        BackgroundScreen(image = R.drawable.app_bg) {
-                            RegisterScreen(
-                                navController,
-                                registerViewModel
-                            )
-                        }
-                    }
-
-                    composable("loginScreen") {
-                        BackgroundScreen(image = R.drawable.app_bg) {
-                            LoginScreen(
-                                loginViewModel,
-                                navController
-                            )
-                        }
-                    }
-
-                    composable("resetPasswordScreen") {
-                        BackgroundScreen(image = R.drawable.app_bg) {
-                            ResetPasswordScreen(resetPasswordViewModel, navController)
-                        }
-                    }
-
-                    composable(
-                        route = "mainTaskScreen/{email}", arguments = listOf(
-                            navArgument("email") {
-                                type = NavType.StringType
-                            })
-                    ) { backStackEntry ->
-                        val email = backStackEntry.arguments?.getString("email")
-
-                        BackgroundScreen(image = R.drawable.main_bg) {
-                            MainTaskScreen(
-                                navHostController = navController,
-                                email = email ?: "",
-                                taskScreenViewModel = taskScreenViewModel,
-                                userScreenViewModel = userScreenViewModel
-                            )
-                        }
-                    }
-
-                    composable(
-                        route = "taskDetailScreen/{taskId}", arguments = listOf(
-                            navArgument("taskId") {
-                                type = NavType.StringType
-                            })
-                    ) { backStackEntry ->
-
-                        val taskId = backStackEntry.arguments?.getString("taskId")
-
-                        TaskDetail(
-                            taskId = taskId!!,
-                            navHostController = navController,
-                            taskDetailViewModel = taskDetailViewModel
+                NavHost(navController = navController, startDestination = startDestination) {
+                composable("logoAndButtons") {
+                    BackgroundScreen(image = R.drawable.app_bg) {
+                        LogoAndButtons(
+                            navController
                         )
-
                     }
                 }
+
+                composable("registerScreen") {
+                    BackgroundScreen(image = R.drawable.app_bg) {
+                        RegisterScreen(
+                            navController,
+                            registerViewModel
+                        )
+                    }
+                }
+
+                composable("loginScreen") {
+                    BackgroundScreen(image = R.drawable.app_bg) {
+                        LoginScreen(
+                            loginViewModel,
+                            navController
+                        )
+                    }
+                }
+
+                composable("resetPasswordScreen") {
+                    BackgroundScreen(image = R.drawable.app_bg) {
+                        ResetPasswordScreen(resetPasswordViewModel, navController)
+                    }
+                }
+
+                composable(
+                    route = "mainTaskScreen/{email}", arguments = listOf(
+                        navArgument("email") {
+                            type = NavType.StringType
+                        })
+                ) { backStackEntry ->
+                    val email = backStackEntry.arguments?.getString("email") ?: firebaseAuth.currentUser?.email
+
+                    BackgroundScreen(image = R.drawable.main_bg) {
+                        MainTaskScreen(
+                            navHostController = navController,
+                            email = email ?: "",
+                            taskScreenViewModel = taskScreenViewModel,
+                            userScreenViewModel = userScreenViewModel
+                        )
+                    }
+                }
+
+                composable(
+                    route = "taskDetailScreen/{taskId}", arguments = listOf(
+                        navArgument("taskId") {
+                            type = NavType.StringType
+                        })
+                ) { backStackEntry ->
+
+                    val taskId = backStackEntry.arguments?.getString("taskId")
+
+                    TaskDetail(
+                        taskId = taskId!!,
+                        navHostController = navController,
+                        taskDetailViewModel = taskDetailViewModel
+                    )
+
+                }
+            }
             }
         }
     }
