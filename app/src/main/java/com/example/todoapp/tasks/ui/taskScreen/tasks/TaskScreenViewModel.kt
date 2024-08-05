@@ -39,7 +39,6 @@ class TaskScreenViewModel @Inject constructor(
 
     init {
         getCategories()
-        getAllTasks()
     }
 
     fun getCategories() {
@@ -147,10 +146,10 @@ class TaskScreenViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getAllTasks() {
+    fun getAllTasks(userEmail:String) {
         viewModelScope.launch {
             try {
-                when (val response = repositoryImp.getAllTasks()) {
+                when (val response = repositoryImp.getAllTasks(userEmail)) {
                     is TaskResult.Error -> {
                         _state.value = TaskScreenState.Error("Error: ${response.error}")
                     }
@@ -174,7 +173,7 @@ class TaskScreenViewModel @Inject constructor(
     }
 
 
-    fun onCheckedChange(taskId: String, check: Boolean) {
+    fun onCheckedChange(taskId: String, check: Boolean, userEmail: String) {
         viewModelScope.launch {
             try {
                 when (val response = repositoryImp.onCheckChange(taskId, check)) {
@@ -182,7 +181,7 @@ class TaskScreenViewModel @Inject constructor(
                         _state.value = TaskScreenState.Error("Error: ${response.error}")
                     }
                     is TaskResult.Success -> {
-                        getAllTasks()
+                        getAllTasks(userEmail)
                     }
                 }
 

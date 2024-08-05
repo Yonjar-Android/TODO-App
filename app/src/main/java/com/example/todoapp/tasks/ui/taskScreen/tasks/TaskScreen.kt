@@ -97,6 +97,10 @@ fun TaskScreen(
     val fetchedCategories = rememberSaveable { mutableStateOf<List<Category>?>(null) }
     val fetchedTasks = rememberSaveable { mutableStateOf<List<TaskDom>?>(null) }
 
+    LaunchedEffect(Unit) {
+        viewModel.getAllTasks(email)
+    }
+
     // Update fetchedCategories when viewModel state changes
     LaunchedEffect(state.value) {
         fetchedCategories.value = viewModel.categories
@@ -109,7 +113,7 @@ fun TaskScreen(
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 // Fetch tasks when returning to this screen
-                viewModel.getAllTasks()
+                viewModel.getAllTasks(email)
             }
         }
         backStackEntry?.lifecycle?.addObserver(observer)
@@ -209,7 +213,8 @@ fun TaskScreen(
                                             task = task, onCheckedChange = { taskId, check ->
                                                 viewModel.onCheckedChange(
                                                     taskId = taskId,
-                                                    check
+                                                    check,
+                                                    email
                                                 )
                                             },
                                             goToDetail = { taskId ->
@@ -247,7 +252,8 @@ fun TaskScreen(
                 close = {
                     show = false
                 }, showDate = showDate,
-                categories = fetchedCategories.value
+                categories = fetchedCategories.value,
+                userEmail = email
             )
         }
 
@@ -275,7 +281,7 @@ fun TaskScreen(
                 if (showToast.value && currentState.message.isNotBlank()) {
                     Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
                     viewModel.resetState()
-                    viewModel.getAllTasks()
+                    viewModel.getAllTasks(email)
                 }
                 viewModel.resetState()
             }
@@ -290,7 +296,8 @@ fun DialogTaskAdd(
     close: () -> Unit,
     closeDate: () -> Unit,
     showDate: Boolean,
-    categories: List<Category>?
+    categories: List<Category>?,
+    userEmail:String
 ) {
 
     ConstraintLayout(
@@ -432,7 +439,7 @@ fun DialogTaskAdd(
                     check = false,
                     deliverables = listOf(),
                     deliverablesDescription = entregables,
-                    users = listOf(),
+                    users = listOf(userEmail),
                     category = category,
                     creationDate = getCurrentDate()
                 )

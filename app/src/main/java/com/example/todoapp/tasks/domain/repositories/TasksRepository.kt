@@ -34,7 +34,7 @@ interface TasksRepository {
         category:DocumentReference
     ): TaskResult
 
-    suspend fun getAllTasks(): TaskResult
+    suspend fun getAllTasks(userEmail:String): TaskResult
 
     suspend fun getTaskById(taskId:String): TaskDetailResult
 

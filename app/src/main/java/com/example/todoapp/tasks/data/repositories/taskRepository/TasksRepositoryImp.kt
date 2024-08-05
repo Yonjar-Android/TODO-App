@@ -149,7 +149,7 @@ class TasksRepositoryImp @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override suspend fun getAllTasks(): TaskResult {
+    override suspend fun getAllTasks(userEmail:String): TaskResult {
         return suspendCancellableCoroutine { continuation ->
             firestore.collection("Tareas").get()
                 .addOnSuccessListener { querySnapshot ->
@@ -162,7 +162,7 @@ class TasksRepositoryImp @Inject constructor(
                         val tasks = convertTasks(querySnapshot.documents)
                             .filter { task ->
                                 // Filtrar las tareas basándose en las condiciones dadas
-                                 LocalDate.parse(task.date, formatter) >= LocalDate.now()
+                                 LocalDate.parse(task.date, formatter) >= LocalDate.now() && task.users.contains(userEmail)
                             }
 
                         continuation.resume(

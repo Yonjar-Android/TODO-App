@@ -12,7 +12,7 @@ data class TaskModel(
     @PropertyName("check") val check: Boolean = false,
     @PropertyName("deliverablesDescription") val deliverablesDesc: String = "",
     @PropertyName("deliverables") val deliverables: List<String> = listOf(),
-    @PropertyName("usersAssigned") val users: List<String> = listOf(),
+    @PropertyName("users") val users: List<String> = listOf(),
     @PropertyName("category") val category: DocumentReference? = null,
     @PropertyName("categoryId") val categoryId:String = "",
     @PropertyName("creationDate") val creationDate: String = "" // Nuevo atributo
