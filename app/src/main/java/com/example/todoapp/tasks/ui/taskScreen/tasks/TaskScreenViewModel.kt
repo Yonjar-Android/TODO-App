@@ -19,6 +19,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class TaskScreenViewModel @Inject constructor(
     private val repositoryImp: TasksRepositoryImp,
@@ -60,7 +61,6 @@ class TaskScreenViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun createTask(
         name: String,
         description: String?,
@@ -117,7 +117,6 @@ class TaskScreenViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun validations(name: String, date: String, category: String): Boolean {
         _showToast.value = true
         if (name.isBlank()) {
@@ -147,6 +146,7 @@ class TaskScreenViewModel @Inject constructor(
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getAllTasks() {
         viewModelScope.launch {
             try {
@@ -157,7 +157,7 @@ class TaskScreenViewModel @Inject constructor(
 
                     is TaskResult.Success -> {
                         _state.value = TaskScreenState.Success(response.message)
-                        tasks = response.tasks
+                        tasks = sortTasksByDate(response.tasks)
                     }
                 }
 
@@ -166,6 +166,13 @@ class TaskScreenViewModel @Inject constructor(
             }
         }
     }
+
+    private fun sortTasksByDate(tasks: List<TaskDom>): List<TaskDom> {
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        return tasks.sortedWith(compareBy<TaskDom> { it.check } // Primero por check, false primero
+            .thenByDescending { LocalDate.parse(it.creationDate, formatter) }) // Luego por fecha de creación en orden descendente
+    }
+
 
     fun onCheckedChange(taskId: String, check: Boolean) {
         viewModelScope.launch {

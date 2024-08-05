@@ -137,6 +137,9 @@ fun TaskScreen(
         Scaffold(
             content = {
 
+                val selectedCategoryId = remember { mutableStateOf<String?>(null) }
+
+
                 Row {
                     SearchBar(
                         query = query,
@@ -161,14 +164,20 @@ fun TaskScreen(
                         LazyRow(modifier = Modifier.fillMaxWidth()) {
                             if (fetchedCategories.value != null) {
                                 items(fetchedCategories.value!!) { categ ->
+
+                                    val isSelected = categ.id == selectedCategoryId.value
+                                    val backgroundColor =
+                                        if (isSelected) Color.Cyan else Color.White
+
                                     Box(
                                         modifier = Modifier
                                             .padding(16.dp)
-                                            .background(Color.White)
+                                            .background(backgroundColor)
                                             .clickable {
-                                                    fetchedTasks.value = viewModel.tasks?.filter  {
-                                                        it.categoryId == categ.id
-                                                    }
+                                                selectedCategoryId.value = categ.id
+                                                fetchedTasks.value = viewModel.tasks?.filter {
+                                                    it.categoryId == categ.id
+                                                }
                                             }
                                     ) {
                                         Text(
@@ -193,7 +202,9 @@ fun TaskScreen(
                                 contentPadding = it
                             ) {
                                 if (fetchedTasks.value != null) {
-                                    items(fetchedTasks.value!!) { task ->
+                                    items(
+                                        fetchedTasks.value!!,
+                                        key = { task -> task.taskId }) { task ->
                                         TaskCheckBox(
                                             task = task, onCheckedChange = { taskId, check ->
                                                 viewModel.onCheckedChange(
@@ -510,6 +521,7 @@ fun DropDowsMenuCategories(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TaskCheckBox(
     task: TaskDom,
@@ -528,7 +540,7 @@ fun TaskCheckBox(
                 goToDetail(task.taskId)
             }
     ) {
-        val checkedState = rememberSaveable { mutableStateOf(task.check) }
+        val checkedState = remember { mutableStateOf(task.check) }
 
         Text(
             text = task.name,
@@ -553,6 +565,7 @@ fun TaskCheckBox(
     Spacer(modifier = Modifier.size(8.dp))
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DropDownDelete(task: TaskDom, viewModel: TaskScreenViewModel) {
     var openDialog by remember { mutableStateOf(false) }
@@ -591,6 +604,7 @@ fun DropDownDelete(task: TaskDom, viewModel: TaskScreenViewModel) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DialogDelete(task: TaskDom, viewModel: TaskScreenViewModel, close: () -> Unit) {
     AlertDialog(onDismissRequest = {}, confirmButton = {

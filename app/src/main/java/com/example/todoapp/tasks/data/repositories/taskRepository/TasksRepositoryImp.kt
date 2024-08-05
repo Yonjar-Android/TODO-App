@@ -1,5 +1,7 @@
 package com.example.todoapp.tasks.data.repositories.taskRepository
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.todoapp.R
 import com.example.todoapp.tasks.data.models.CategoryModel
 import com.example.todoapp.tasks.data.models.TaskModel
@@ -11,6 +13,8 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
@@ -144,6 +148,7 @@ class TasksRepositoryImp @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getAllTasks(): TaskResult {
         return suspendCancellableCoroutine { continuation ->
             firestore.collection("Tareas").get()
@@ -152,10 +157,18 @@ class TasksRepositoryImp @Inject constructor(
                         continuation.resume(TaskResult.Error(""))
 
                     } else {
+
+                        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                        val tasks = convertTasks(querySnapshot.documents)
+                            .filter { task ->
+                                // Filtrar las tareas basándose en las condiciones dadas
+                                 LocalDate.parse(task.date, formatter) >= LocalDate.now()
+                            }
+
                         continuation.resume(
                             TaskResult.Success(
                                 "",
-                                tasks = convertTasks(querySnapshot.documents)
+                                tasks = tasks
                             )
                         )
                     }
