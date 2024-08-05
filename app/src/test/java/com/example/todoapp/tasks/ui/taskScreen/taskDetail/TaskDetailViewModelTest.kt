@@ -45,6 +45,7 @@ class TaskDetailViewModelTest {
     private val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
     private val dateNow:String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
     private val category: String = "documents"
+    private val categoryId = "Category1"
 
     private lateinit var taskDetailResultSuccess: TaskDetailResult
     private lateinit var taskDetailResultError: TaskDetailResult.Error
@@ -69,7 +70,8 @@ class TaskDetailViewModelTest {
             check = false,
             category = categoryMock,
             date = date,
-            creationDate = dateNow
+            creationDate = dateNow,
+            categoryId = categoryId
         )
 
         taskDetailResultSuccess = TaskDetailResult.Success(

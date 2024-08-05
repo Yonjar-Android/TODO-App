@@ -6,16 +6,20 @@ import com.example.todoapp.tasks.domain.models.Category
 
 object TaskMotherObject {
 
-  private val errorMessage = "An error has occurred"
+    private val errorMessage = "An error has occurred"
+    private val categoryId = "category1"
 
     private val categoryList = listOf(
         Category(
+            id = "category1",
             "Documents"
         ),
         Category(
+            id = "category2",
             "Tasks"
         ),
         Category(
+            id = "category3",
             "Images"
         )
     )

@@ -48,6 +48,7 @@ class TaskScreenViewModelTest {
     private val taskName = "Create the database"
     private val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
     private val dateNow:String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    private val categoryId = "category1"
 
     private val error = "Error: An error has occurred"
     private val errorException = "An error has occurred"
@@ -306,7 +307,8 @@ class TaskScreenViewModelTest {
                 check = false,
                 category = categoryMock,
                 date = date,
-                creationDate = dateNow
+                creationDate = dateNow,
+                categoryId = categoryId
             )
         )
 
