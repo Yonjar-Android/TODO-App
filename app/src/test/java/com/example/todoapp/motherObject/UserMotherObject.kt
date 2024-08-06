@@ -4,6 +4,7 @@ import com.example.todoapp.tasks.data.models.UserModel
 import com.example.todoapp.tasks.data.repositories.authRepository.CreateUserResult
 import com.example.todoapp.tasks.data.repositories.authRepository.ResetResult
 import com.example.todoapp.tasks.data.repositories.authRepository.UserResult
+import com.example.todoapp.tasks.data.repositories.authRepository.UsersResult
 
 object UserMotherObject {
     val userModel = UserModel(
@@ -26,4 +27,6 @@ object UserMotherObject {
     //ResetResults
     val resetResultSuccess = ResetResult.Success("Success message")
     val resetResultError = ResetResult.Error(error)
+
+    val usersResultError = UsersResult.Error(error)
 }

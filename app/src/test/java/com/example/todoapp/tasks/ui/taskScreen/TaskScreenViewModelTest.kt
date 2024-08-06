@@ -44,6 +44,8 @@ class TaskScreenViewModelTest {
 
 
     //variables
+    private val userEmail = "juan132y@gmail.com"
+
     private val taskId = "abc123"
     private val taskName = "Create the database"
     private val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
@@ -315,10 +317,10 @@ class TaskScreenViewModelTest {
         val taskResult = TaskResult.Success(tasks = tasksList, message = "")
 
         //Given
-        Mockito.`when`(repositoryImp.getAllTasks()).thenReturn(taskResult)
+        Mockito.`when`(repositoryImp.getAllTasks(userEmail)).thenReturn(taskResult)
 
         //When
-        viewModel.getAllTasks()
+        viewModel.getAllTasks(userEmail)
 
         //Then
         viewModel.state.test {
@@ -334,10 +336,10 @@ class TaskScreenViewModelTest {
     @Test
     fun `getAllTasks should emit Error state if TaskResult_Error is returned`() = runTest {
         //Given
-        Mockito.`when`(repositoryImp.getAllTasks()).thenReturn(TaskMotherObject.TaskResultError)
+        Mockito.`when`(repositoryImp.getAllTasks(userEmail)).thenReturn(TaskMotherObject.TaskResultError)
 
         //When
-        viewModel.getAllTasks()
+        viewModel.getAllTasks(userEmail)
 
         //Then
         viewModel.state.test {
@@ -354,10 +356,10 @@ class TaskScreenViewModelTest {
     @Test
     fun `getAllTasks should emit Error state if an exception occurs`() = runTest {
         //Given
-        Mockito.`when`(repositoryImp.getAllTasks()).thenThrow(RuntimeException(errorException))
+        Mockito.`when`(repositoryImp.getAllTasks(userEmail)).thenThrow(RuntimeException(errorException))
 
         //When
-        viewModel.getAllTasks()
+        viewModel.getAllTasks(userEmail)
 
         //Then
         viewModel.state.test {
@@ -377,7 +379,7 @@ class TaskScreenViewModelTest {
             .thenReturn(TaskMotherObject.TaskResultError)
 
         //When
-        viewModel.onCheckedChange(taskId, true)
+        viewModel.onCheckedChange(taskId, true, userEmail)
 
         //Then
         viewModel.state.test {
@@ -397,7 +399,7 @@ class TaskScreenViewModelTest {
             .thenThrow(RuntimeException(errorException))
 
         //When
-        viewModel.onCheckedChange(taskId, true)
+        viewModel.onCheckedChange(taskId, true, userEmail)
 
         //Then
         viewModel.state.test {

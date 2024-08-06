@@ -3,6 +3,8 @@ package com.example.todoapp.tasks.ui.taskScreen.taskDetail
 import app.cash.turbine.test
 import com.example.todoapp.TestCoroutineRule
 import com.example.todoapp.motherObject.TaskMotherObject
+import com.example.todoapp.motherObject.UserMotherObject
+import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskDetailResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TasksRepositoryImp
@@ -32,6 +34,9 @@ class TaskDetailViewModelTest {
     lateinit var repositoryImp: TasksRepositoryImp
 
     @Mock
+    lateinit var authRepositoryImp: AuthRepositoryImp
+
+    @Mock
     lateinit var resourceProvider: ResourceProvider
 
     private lateinit var taskDetailViewModel: TaskDetailViewModel
@@ -43,9 +48,11 @@ class TaskDetailViewModelTest {
     private val taskId = "myTaskId123"
     private val taskName = "Create the database"
     private val date: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-    private val dateNow:String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+    private val dateNow: String = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
     private val category: String = "documents"
     private val categoryId = "Category1"
+
+    private val userEmail = "juan132y@gmail.com"
 
     private lateinit var taskDetailResultSuccess: TaskDetailResult
     private lateinit var taskDetailResultError: TaskDetailResult.Error
@@ -57,7 +64,8 @@ class TaskDetailViewModelTest {
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        taskDetailViewModel = TaskDetailViewModel(repositoryImp,resourceProvider)
+        taskDetailViewModel =
+            TaskDetailViewModel(repositoryImp, resourceProvider, authRepositoryImp)
 
 
         val task = TaskDom(
@@ -125,7 +133,8 @@ class TaskDetailViewModelTest {
     @Test
     fun `getTaskById should emit Error state if an Exception occurs`() = runTest {
         //Given
-        Mockito.`when`(repositoryImp.getTaskById(taskId)).thenThrow(RuntimeException(errorException))
+        Mockito.`when`(repositoryImp.getTaskById(taskId))
+            .thenThrow(RuntimeException(errorException))
 
         //When
         taskDetailViewModel.getTaskById(taskId)
@@ -141,45 +150,47 @@ class TaskDetailViewModelTest {
     }
 
     @Test
-    fun `updateTask should Emit Success state if TaskResult_Success is returned in both functions`() = runTest {
+    fun `updateTask should Emit Success state if TaskResult_Success is returned in both functions`() =
+        runTest {
 
-        val taskResultSuccessT = TaskResult.Success("", categoryMock)
+            val taskResultSuccessT = TaskResult.Success("", categoryMock)
 
-        //Given
-        Mockito.`when`(repositoryImp.getCategoryReference(category))
-            .thenReturn(taskResultSuccessT)
+            //Given
+            Mockito.`when`(repositoryImp.getCategoryReference(category))
+                .thenReturn(taskResultSuccessT)
 
-        Mockito.`when`(
-            repositoryImp.updateTask(
+            Mockito.`when`(
+                repositoryImp.updateTask(
+                    taskId = taskId,
+                    name = taskName,
+                    description = "",
+                    deliverables = listOf(),
+                    deliverablesDescription = "",
+                    users = listOf(),
+                    category = categoryMock,
+                    date = date
+                )
+            ).thenReturn(TaskMotherObject.TaskResultSuccess)
+
+            //When
+            taskDetailViewModel.updateTask(
                 taskId = taskId,
                 name = taskName,
                 description = "",
                 deliverables = listOf(),
                 deliverablesDescription = "",
                 users = listOf(),
-                category = categoryMock,
+                category = category,
                 date = date
-            )).thenReturn(TaskMotherObject.TaskResultSuccess)
+            )
 
-        //When
-        taskDetailViewModel.updateTask(
-            taskId = taskId,
-            name = taskName,
-            description = "",
-            deliverables = listOf(),
-            deliverablesDescription = "",
-            users = listOf(),
-            category = category,
-            date = date
-        )
-
-        taskDetailViewModel.state.test {
-            assertTrue(awaitItem() is TaskDetailState.Loading)
-            advanceUntilIdle()
-            val state = awaitItem()
-            assertTrue(state is TaskDetailState.Success)
+            taskDetailViewModel.state.test {
+                assertTrue(awaitItem() is TaskDetailState.Loading)
+                advanceUntilIdle()
+                val state = awaitItem()
+                assertTrue(state is TaskDetailState.Success)
+            }
         }
-    }
 
     @Test
     fun `updateTask should emit Error state if TaskResult_Error is received after getCategoryReference is called`() =
@@ -254,7 +265,7 @@ class TaskDetailViewModelTest {
         }
 
     @Test
-    fun`updateTask should emit Error state if an Exception occurs`() = runTest {
+    fun `updateTask should emit Error state if an Exception occurs`() = runTest {
         //Given
         Mockito.`when`(repositoryImp.getCategoryReference(category))
             .thenThrow(RuntimeException(errorException))
@@ -342,6 +353,45 @@ class TaskDetailViewModelTest {
 
         //When
         taskDetailViewModel.getCategories()
+
+        //Then
+        taskDetailViewModel.state.test {
+            assertTrue(awaitItem() is TaskDetailState.Loading)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskDetailState.Error)
+            val errorState = state as TaskDetailState.Error
+            assertEquals(errorState.error, error)
+        }
+    }
+
+    @Test
+    fun `getEmails should emit Error state if a CategoryResult_Error is received`() = runTest {
+        //Given
+        Mockito.`when`(authRepositoryImp.getUsers())
+            .thenReturn(UserMotherObject.usersResultError)
+
+        //When
+        taskDetailViewModel.getEmails()
+
+        //Then
+        taskDetailViewModel.state.test {
+            assertTrue(awaitItem() is TaskDetailState.Loading)
+            advanceUntilIdle()
+            val state = awaitItem()
+            assertTrue(state is TaskDetailState.Error)
+            val errorState = state as TaskDetailState.Error
+            assertEquals(errorState.error, error)
+        }
+    }
+
+    @Test
+    fun `getEmails should emit Error state if an exception occurs`() = runTest {
+        //Given
+        Mockito.`when`(authRepositoryImp.getUsers()).thenThrow(RuntimeException(errorException))
+
+        //When
+        taskDetailViewModel.getEmails()
 
         //Then
         taskDetailViewModel.state.test {
