@@ -52,8 +52,6 @@ class TaskDetailViewModelTest {
     private val category: String = "documents"
     private val categoryId = "Category1"
 
-    private val userEmail = "juan132y@gmail.com"
-
     private lateinit var taskDetailResultSuccess: TaskDetailResult
     private lateinit var taskDetailResultError: TaskDetailResult.Error
 
