@@ -5,6 +5,8 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.R
+import com.example.todoapp.tasks.data.repositories.authRepository.AuthRepositoryImp
+import com.example.todoapp.tasks.data.repositories.authRepository.UsersResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.CategoryResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskDetailResult
 import com.example.todoapp.tasks.data.repositories.taskRepository.TaskResult
@@ -23,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(
     private val repositoryImp: TasksRepositoryImp,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val authRepositoryImp: AuthRepositoryImp
     ) :
     ViewModel() {
 
@@ -36,11 +39,12 @@ class TaskDetailViewModel @Inject constructor(
     private val _task = MutableStateFlow<TaskDom?>(null)
     var task = _task
 
+    private val _userEmails = MutableStateFlow<List<String>>(mutableListOf())
+    var userEmails = _userEmails
+
     var category = ""
 
-    init {
-        getCategories()
-    }
+
 
     fun getTaskById(taskId: String) {
 
@@ -135,6 +139,23 @@ class TaskDetailViewModel @Inject constructor(
                     is CategoryResult.Success -> {
                         _categories.value = response.categories!!
                         _state.value = TaskDetailState.Success("")
+                    }
+                }
+            } catch (e: Exception) {
+                _state.value = TaskDetailState.Error("Error: ${e.message}")
+            }
+        }
+    }
+
+    fun getEmails(){
+        viewModelScope.launch {
+            try {
+                when (val response = authRepositoryImp.getUsers()) {
+                    is UsersResult.Error -> {
+                        _state.value = TaskDetailState.Error("Error: ${response.error}")
+                    }
+                    is UsersResult.Success -> {
+                        _userEmails.value = response.listUsers
                     }
                 }
             } catch (e: Exception) {

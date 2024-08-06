@@ -132,6 +132,30 @@ class AuthRepositoryImp @Inject constructor(
         }
     }
 
+    override suspend fun getUsers(): UsersResult {
+        return suspendCancellableCoroutine { continuation ->
+            firestore.collection("Usuarios").get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.isEmpty){
+                        continuation.resume(UsersResult.Error("No users found"))
+                    } else{
+                        val emails:List<String> = getEmails(querySnapshot)
+                        continuation.resume(UsersResult.Success(emails))
+                    }
+                }.addOnFailureListener {
+                    continuation.resume(UsersResult.Error(it.message ?: ""))
+                }
+        }
+    }
+
+    private fun getEmails(querySnapshot: QuerySnapshot):List<String>{
+        val emails = mutableListOf<String>()
+        querySnapshot.documents.forEach {
+            it.toObject(UserModel::class.java)?.toUser()?.email?.let { email -> emails.add(email) }
+        }
+        return emails
+    }
+
     private fun convertToUser(querySnapshot: QuerySnapshot): UserM {
         return querySnapshot.documents[0].toObject(UserModel::class.java)!!.toUser()
     }

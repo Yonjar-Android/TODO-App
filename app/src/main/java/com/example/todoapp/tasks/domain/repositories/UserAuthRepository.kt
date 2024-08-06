@@ -3,6 +3,7 @@ package com.example.todoapp.tasks.domain.repositories
 import com.example.todoapp.tasks.data.repositories.authRepository.CreateUserResult
 import com.example.todoapp.tasks.data.repositories.authRepository.ResetResult
 import com.example.todoapp.tasks.data.repositories.authRepository.UserResult
+import com.example.todoapp.tasks.data.repositories.authRepository.UsersResult
 
 interface UserAuthRepository {
 
@@ -15,4 +16,6 @@ interface UserAuthRepository {
     suspend fun resetPassword(email: String): ResetResult
 
     suspend fun getUserByEmail(email:String): UserResult
+
+    suspend fun getUsers(): UsersResult
 }

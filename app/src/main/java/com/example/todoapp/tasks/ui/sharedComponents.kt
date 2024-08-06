@@ -19,10 +19,6 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
@@ -60,6 +56,7 @@ fun TextFieldComp(
     height: Dp = 50.dp,
     singleL:Boolean = true,
     maxLin:Int = 1,
+    readOnlyValue:Boolean = false,
     onValueChanged: (String) -> Unit
 ) {
     Column(
@@ -86,7 +83,8 @@ fun TextFieldComp(
                 .size(height = height, width = 0.dp),
             textStyle = TextStyle(fontSize = 14.sp),
             singleLine = singleL,
-            maxLines = maxLin
+            maxLines = maxLin,
+            readOnly = readOnlyValue
         )
     }
 }
