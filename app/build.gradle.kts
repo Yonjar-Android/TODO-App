@@ -17,92 +17,113 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.todoapp.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += listOf(
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE",
+                "META-INF/NOTICE.md",
+                "META-INF/NOTICE",
+                "META-INF/ASL2.0",
+                "META-INF/LICENSE-notice.md"
+            )
         }
+
+        buildTypes {
+            release {
+                isMinifyEnabled = false
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            }
+        }
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+        buildFeatures {
+            compose = true
+        }
+        composeOptions {
+            kotlinCompilerExtensionVersion = "1.5.1"
+        }
+        packaging {
+            resources {
+                excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            }
+        }
+
+
     }
 
+    dependencies {
 
-}
+        implementation(libs.androidx.core.ktx)
+        implementation(libs.androidx.lifecycle.runtime.ktx)
+        implementation(libs.androidx.activity.compose)
+        implementation(platform(libs.androidx.compose.bom))
+        implementation(libs.androidx.ui)
+        implementation(libs.androidx.ui.graphics)
+        implementation(libs.androidx.ui.tooling.preview)
+        implementation(libs.androidx.material3)
+        testImplementation(libs.junit)
+        testImplementation(libs.junit.jupiter)
+        androidTestImplementation(libs.androidx.junit)
+        androidTestImplementation(libs.androidx.espresso.core)
+        androidTestImplementation(platform(libs.androidx.compose.bom))
+        androidTestImplementation(libs.androidx.ui.test.junit4)
+        debugImplementation(libs.androidx.ui.tooling)
+        debugImplementation(libs.androidx.ui.test.manifest)
 
-dependencies {
+        // Mockk library para mockear en los test de ui
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    testImplementation(libs.junit.jupiter)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+        androidTestImplementation(libs.mockk.android)
 
-    // Mockito y turbine
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
+        // Librerías de testing de dagger hilt
+        androidTestImplementation(libs.hilt.android.testing)
+        kaptAndroidTest(libs.hilt.android.compiler)
 
-    testImplementation (libs.kotlinx.coroutines.test)
-    testImplementation(libs.turbine)
+        // Mockito y turbine
+        testImplementation(libs.mockito.core)
+        testImplementation(libs.mockito.kotlin)
 
-    // Firebase
+        testImplementation(libs.kotlinx.coroutines.test)
+        testImplementation(libs.turbine)
 
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
+        // Firebase
 
-    // Dagger Hilt
-    implementation (libs.hilt.android)
-    kapt (libs.hilt.compiler)
+        implementation(platform(libs.firebase.bom))
+        implementation(libs.firebase.auth)
+        implementation(libs.firebase.firestore)
 
-    // Splash Screen
+        // Dagger Hilt
+        implementation(libs.hilt.android)
+        kapt(libs.hilt.compiler)
 
-    implementation(libs.androidx.core.splashscreen)
+        // Splash Screen
 
-    // Navigation
+        implementation(libs.androidx.core.splashscreen)
 
-    implementation(libs.androidx.navigation.compose)
+        // Navigation
 
-    // Constraint Layout
+        implementation(libs.androidx.navigation.compose)
 
-    implementation(libs.androidx.constraintlayout.compose)
-}
+        // Constraint Layout
 
-kapt {
-    correctErrorTypes
+        implementation(libs.androidx.constraintlayout.compose)
+    }
+
+    kapt {
+        correctErrorTypes
+    }
 }

@@ -2,6 +2,8 @@
 agp = "8.5.0"
 constraintlayoutCompose = "1.1.0-alpha13"
 firebaseBom = "32.8.0"
+hiltAndroidCompiler = "2.50"
+hiltAndroidTesting = "2.50"
 hiltCompiler = "2.50"
 hiltAndroid = "2.50"
 kotlin = "1.9.0"
@@ -14,6 +16,7 @@ activityCompose = "1.9.0"
 composeBom = "2024.04.01"
 googleGmsGoogleServices = "4.4.2"
 mockitoV = "5.2.1"
+mockkAndroid = "1.13.12"
 turbine = "1.1.0"
 navigationCompose = "2.7.7"
 kotlinxCoroutinesTest = "1.8.0"
@@ -31,6 +34,8 @@ firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompiler" }
+hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hiltAndroidTesting" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -47,6 +52,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoV" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoV" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkAndroid" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
