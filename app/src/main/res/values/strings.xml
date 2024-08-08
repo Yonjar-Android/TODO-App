@@ -106,4 +106,13 @@
     <string name="error_authentication">Error during authentication:</string>
     <string name="error_verifying_email">Error verifying email:</string>
 
+    <string name="confirm_button">Confirm</string>
+    <string name="usersAssigned">Users assigned</string>
+    <string name="usersToAssing">Users to assign</string>
+    <string name="selectUsers">Select users</string>
+    <string name="users">Users</string>
+    <string name="addUsers">Add users</string>
+
+    <string name="usersNotFound">Users not found</string>
+
 </resources>

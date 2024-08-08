@@ -285,7 +285,7 @@ fun DialogTaskAdd(
             /////////
 
             TextFieldComp(
-                labelField = "Usuarios",
+                labelField = stringResource(id = R.string.users),
                 maxLin = 4,
                 height = 80.dp,
                 singleL = false,
@@ -293,7 +293,7 @@ fun DialogTaskAdd(
                 readOnlyValue = true
             ) {}
 
-            TonalButton(title = "Agregar") {
+            TonalButton(title = stringResource(id = R.string.addUsers)) {
                 showAddUsers = true
             }
 
@@ -373,7 +373,7 @@ fun AddUsersDialog(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Seleccionar Usuarios", style = MaterialTheme.typography.bodySmall)
+                Text(text = stringResource(id = R.string.selectUsers), style = MaterialTheme.typography.bodySmall)
                 Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -386,7 +386,7 @@ fun AddUsersDialog(
                 ) {
                     item {
                         Text(
-                            text = "Usuarios para asignar",
+                            text = stringResource(id = R.string.usersToAssing),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(8.dp)
@@ -410,7 +410,7 @@ fun AddUsersDialog(
                 ) {
                     item {
                         Text(
-                            text = "Usuarios asignados",
+                            text = stringResource(id = R.string.usersAssigned),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.padding(8.dp)
@@ -434,7 +434,7 @@ fun AddUsersDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     TextButton(onClick = onConfirm) {
-                        Text("Confirmar")
+                        Text(stringResource(id = R.string.confirm_button))
                     }
                 }
             }

@@ -99,4 +99,13 @@
     <!-- General error messages -->
     <string name="error_authentication">Error durante la autenticación:</string>
     <string name="error_verifying_email">Error al verificar el correo:</string>
+
+    <string name="confirm_button">Confirmar</string>
+    <string name="usersAssigned">Usuarios asignados</string>
+    <string name="usersToAssing">Usuarios para asignar</string>
+    <string name="selectUsers">Seleccionar usuarios</string>
+    <string name="users">Usuarios</string>
+    <string name="addUsers">Agregar</string>
+
+    <string name="usersNotFound">No se encontraron usuarios</string>
 </resources>
